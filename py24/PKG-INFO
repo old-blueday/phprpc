@@ -1,0 +1,23 @@
+Metadata-Version: 1.1
+Name: phprpc
+Version: 3.0.2
+Author: Ma Bingyao
+Author-email: andot at phprpc com
+Maintainer: Ma Bingyao
+Maintainer-email: andot at phprpc com
+Home-page: http://www.phprpc.org
+Summary: Perfect High Performance Remote Procedure Call
+License: LGPL
+Description: PHPRPC is a Perfect High Performance Remote Procedure Calling that works over
+        the Internet. It's secure and fast. It has a smaller overhead. It's powerful and
+        easy to use. This project is implements of PHPRPC client and server for Python
+Keywords: PHPRPC
+Platform: Any
+Classifier: Development Status :: 4 - Beta
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
+Classifier: Programming Language :: Python
+Classifier: Topic :: Internet :: WWW/HTTP :: WSGI :: Application
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Software Development :: Object Brokering
+Classifier: Topic :: System :: Distributed Computing

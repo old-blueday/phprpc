@@ -1,0 +1,11 @@
+#!/bin/sh
+mkdir classes
+javac -source 1.2 -classpath lib/servlet-api.jar:lib/spring.jar -d classes org/phprpc/*.java org/phprpc/util/*.java org/phprpc/spring/remoting/*.java
+jar cf phprpc_spring.jar dhparams -C classes .
+rm -rf classes/org/phprpc/spring
+jar cf phprpc.jar dhparams -C classes .
+rm classes/org/phprpc/util/DHParams.class
+rm classes/org/phprpc/PHPRPC_Server.class
+rm classes/org/phprpc/RemoteFunction.class
+jar cf phprpc_client.jar -C classes .
+rm -rf classes

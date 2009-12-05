@@ -1,0 +1,46 @@
+
+                                  P H P R P C
+
+
+  What is it? 
+  -----------
+  PHPRPC is a Remote Procedure Calling protocol that works over the Internet.
+  It is secure and fast. It has a smaller overhead. It is powerful and easy to
+  use. This project is the client and server implementations of the PHPRPC.
+
+
+  The Latest Version
+  ------------------
+
+  Details of the latest version can be found on the PHPRPC Project web site
+  <http://www.phprpc.org/>.
+
+
+  Documentation
+  -------------
+
+  Documentation is available in HTML format. For information about PHPRPC,
+  see the online manual at <http://www.phprpc.org/docs/>.
+
+
+  Licensing
+  ---------
+
+  This software is licensed under the terms you may find in the file 
+  named "LICENSE" in this directory.
+  
+
+  Copyright
+  ---------
+
+  (c) 2005-2008 by Team-PHPRPC
+  e-mail: andot@coolcode.cn
+  www:    http://www.phprpc.org
+          http://www.phprpc.net
+          http://www.phprpc.com
+          http://sourceforge.net/projects/php-rpc/
+
+  Thanks for using PHPRPC.
+
+                                                        The PHPRPC Project
+                                                   <http://www.phprpc.org/>

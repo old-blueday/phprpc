@@ -1,0 +1,10 @@
+document.write(['<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" ',
+                'type="application/x-shockwave-flash" ',
+                'codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" ',
+                'width="0" height="0" id="flashrequest_as3">',
+                '<param name="movie" value="flashrequest.swf" />',
+                '<param name="allowScriptAccess" value="always" />',
+                '<param name="quality" value="high" />',
+                '<embed src="flashrequest.swf" type="application/x-shockwave-flash" ',
+                'width="0" height="0" name="flashrequest_as3" allowScriptAccess="always" />',
+                '</object>'].join(''));

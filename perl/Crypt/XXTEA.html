@@ -1,0 +1,138 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../scineplex.css">
+<title>Crypt::XXTEA - XXTEA encryption arithmetic module.</title>
+<link rel="stylesheet" href="../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:" />
+
+</head>
+
+<body>
+
+<script>writelinks('__top__',3);</script>
+<h1><a>Crypt::XXTEA - XXTEA encryption arithmetic module.</a></h1>
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<li><a href="#example">EXAMPLE</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>Crypt::XXTEA - XXTEA encryption arithmetic module.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+    <span class="keyword">use</span> <span class="variable">Crypt::XXTEA</span><span class="operator">;</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>XXTEA is a secure and fast encryption algorithm. It's suitable for web development. This module allows you to encrypt or decrypt a string using the algorithm.</p>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<dl>
+<dt><strong><a name="item_xxtea_encrypt">xxtea_encrypt</a></strong>
+
+<dd>
+<pre>
+    <span class="keyword">my</span> <span class="variable">$ciphertext</span> <span class="operator">=</span> <span class="variable">xxtea_encrypt</span><span class="operator">(</span><span class="variable">$plaintext</span><span class="operator">,</span> <span class="variable">$key</span><span class="operator">);</span>
+</pre>
+</dd>
+<dd>
+<p>This function encrypts $plaintext using $key and returns the $ciphertext.</p>
+</dd>
+<dt><strong><a name="item_encrypt">encrypt</a></strong>
+
+<dd>
+<pre>
+    <span class="keyword">my</span> <span class="variable">$ciphertext</span> <span class="operator">=</span> <span class="variable">Crypt::XXTEA::encrypt</span><span class="operator">(</span><span class="variable">$plaintext</span><span class="operator">,</span> <span class="variable">$key</span><span class="operator">);</span>
+       
+    <span class="variable">This</span> <span class="variable">function</span> <span class="variable">is</span> <span class="variable">the</span> <span class="variable">same</span> <span class="variable">as</span> <span class="variable">xxtea_encrypt</span><span class="operator">.</span>
+</pre>
+</dd>
+<dt><strong><a name="item_xxtea_decrypt">xxtea_decrypt</a></strong>
+
+<dd>
+<pre>
+    <span class="keyword">my</span> <span class="variable">$plaintext</span> <span class="operator">=</span> <span class="variable">xxtea_decrypt</span><span class="operator">(</span><span class="variable">$ciphertext</span><span class="operator">,</span> <span class="variable">$key</span><span class="operator">);</span>
+</pre>
+</dd>
+<dd>
+<p>This function decrypts $ciphertext using $key and returns the $plaintext.</p>
+</dd>
+<dt><strong><a name="item_decrypt">decrypt</a></strong>
+
+<dd>
+<pre>
+    <span class="keyword">my</span> <span class="variable">$plaintext</span> <span class="operator">=</span> <span class="variable">Crypt::XXTEA::decrypt</span><span class="operator">(</span><span class="variable">$ciphertext</span><span class="operator">,</span> <span class="variable">$key</span><span class="operator">);</span>
+</pre>
+</dd>
+<dd>
+<p>This function is the same as xxtea_decrypt.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="example">EXAMPLE</a></h1>
+<pre>
+    <span class="keyword">use</span> <span class="variable">Crypt::XXTEA</span><span class="operator">;</span>
+    <span class="keyword">my</span> <span class="variable">$ciphertext</span> <span class="operator">=</span> <span class="variable">xxtea_encrypt</span><span class="operator">(</span><span class="string">"Hello XXTEA."</span><span class="operator">,</span> <span class="string">"1234567890abcdef"</span><span class="operator">);</span>
+    <span class="keyword">my</span> <span class="variable">$plaintext</span> <span class="operator">=</span> <span class="variable">xxtea_decrypt</span><span class="operator">(</span><span class="variable">$ciphertext</span><span class="operator">,</span> <span class="string">"1234567890abcdef"</span><span class="operator">);</span>
+    <span class="keyword">print</span> <span class="variable">$plaintext</span><span class="operator">;</span>
+</pre>
+<pre>
+    <span class="variable">$ciphertext</span> <span class="operator">=</span> <span class="variable">Crypt::XXTEA::encrypt</span><span class="operator">(</span><span class="string">"Hi XXTEA."</span><span class="operator">,</span> <span class="string">"1234567890abcdef"</span><span class="operator">);</span>
+    <span class="variable">$plaintext</span> <span class="operator">=</span> <span class="variable">Crypt::XXTEA::decrypt</span><span class="operator">(</span><span class="variable">$ciphertext</span><span class="operator">,</span> <span class="string">"1234567890abcdef"</span><span class="operator">);</span>
+    <span class="keyword">print</span> <span class="variable">$plaintext</span><span class="operator">;</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p>If $plaintext is equal to &quot;&quot;, it returns &quot;&quot;.</p>
+<p>It returns 0 when fails to decrypt.</p>
+<p>Only the first 16 bytes of $key is used. if $key is shorter than 16 bytes, it will be padding \0.</p>
+<p>The XXTEA algorithm is stronger and faster than Crypt::DES, Crypt::Blowfish &amp; Crypt::IDEA.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p>Crypt::DES
+Crypt::Blowfish
+Crypt::IDEA</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>The implementation of the XXTEA algorithm was developed by,
+and is copyright of, Ma Bingyao (<a href="mailto:andot@ujn.edu.cn">andot@ujn.edu.cn</a>)</p>
+
+</body>
+
+</html>

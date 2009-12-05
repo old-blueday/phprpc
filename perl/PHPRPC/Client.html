@@ -1,0 +1,269 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../scineplex.css">
+<title>PHPRPC::Client - Perl implementation of PHPRPC Client 3.0.</title>
+<link rel="stylesheet" href="../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:" />
+
+</head>
+
+<body>
+
+<script>writelinks('__top__',3);</script>
+<h1><a>PHPRPC::Client - Perl implementation of PHPRPC Client 3.0.</a></h1>
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#phprpc__client">PHPRPC::Client</a></li>
+	<ul>
+
+		<li><a href="#methods">METHODS</a></li>
+	</ul>
+
+	<li><a href="#phprpc__error">PHPRPC::Error</a></li>
+	<ul>
+
+		<li><a href="#methods">METHODS</a></li>
+	</ul>
+
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>PHPRPC::Client - Perl implementation of PHPRPC Client 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ <span class="keyword">use</span> <span class="variable">PHPRPC::Client</span><span class="operator">;</span>
+</pre>
+<pre>
+ <span class="keyword">my</span> <span class="variable">$rpc</span> <span class="operator">=</span> <span class="variable">PHPRPC::Client</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="string">"http://www.phprpc.org/server.php"</span><span class="operator">);</span>
+ <span class="variable">$rpc</span><span class="operator">-&gt;</span><span class="variable">setKeyLength</span><span class="operator">(</span><span class="number">256</span><span class="operator">);</span>
+ <span class="variable">$rpc</span><span class="operator">-&gt;</span><span class="variable">setEncryptMode</span><span class="operator">(</span><span class="number">2</span><span class="operator">);</span>
+ <span class="keyword">print</span> <span class="variable">$rpc</span><span class="operator">-&gt;</span><span class="variable">add</span><span class="operator">(</span><span class="number">1</span><span class="operator">,</span> <span class="number">2</span><span class="operator">);</span>       <span class="comment"># add is a remote procedure.</span>
+ <span class="keyword">print</span> <span class="variable">$rpc</span><span class="operator">-&gt;</span><span class="keyword">sub</span><span class="operator">(</span>3, 5<span class="operator">);</span>       <span class="comment"># sub is a remote procedure.</span>
+ <span class="keyword">my</span> <span class="variable">$a</span> <span class="operator">=</span> <span class="operator">[</span><span class="number">1</span><span class="operator">]</span><span class="operator">;</span>
+ <span class="variable">$rpc</span><span class="operator">-&gt;</span><span class="variable">invoke</span><span class="operator">(</span><span class="string">'inc'</span><span class="operator">,</span> <span class="variable">$a</span><span class="operator">,</span> <span class="number">1</span><span class="operator">);</span>  <span class="comment"># inc is a remote procedure, and pass parameters by reference.</span>
+ <span class="keyword">print</span> <span class="variable">$a</span><span class="operator">-&gt;</span><span class="operator">[</span><span class="number">0</span><span class="operator">]</span><span class="operator">;</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="phprpc__client">PHPRPC::Client</a></h1>
+<p>
+</p>
+<h2><a name="methods">METHODS</a></h2>
+<dl>
+<dt><strong><a name="item_new">new</a></strong>
+
+<dd>
+<pre>
+ <span class="keyword">my</span> <span class="variable">$client</span> <span class="operator">=</span> <span class="variable">new</span> <span class="variable">PHPRPC::Client</span><span class="operator">;</span>
+ <span class="keyword">my</span> <span class="variable">$client</span> <span class="operator">=</span> <span class="variable">PHPRPC::Client</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="variable">$url</span><span class="operator">);</span>
+</pre>
+</dd>
+<dd>
+<p>Creates new PHPRPC::Client object.</p>
+</dd>
+<dt><strong><a name="item_setproxy">setProxy</a></strong>
+
+<dd>
+<pre>
+ <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">setProxy</span><span class="operator">();</span>
+ <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">setProxy</span><span class="operator">(</span><span class="variable">$address</span><span class="operator">);</span>
+ <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">setProxy</span><span class="operator">(</span><span class="variable">$host</span><span class="operator">,</span> <span class="variable">$port</span><span class="operator">);</span>
+ <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">setProxy</span><span class="operator">(</span><span class="variable">$host</span><span class="operator">,</span> <span class="variable">$port</span><span class="operator">,</span> <span class="variable">$username</span><span class="operator">,</span> <span class="variable">$password</span><span class="operator">);</span>
+</pre>
+</dd>
+<dd>
+<p>Set the proxy server for the transfer. $username and $password is for the HTTP Basic Authorization. Without parameters, using env proxy.</p>
+</dd>
+<dt><strong><a name="item_useservice">useService</a></strong>
+
+<dd>
+<pre>
+ <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">useService</span><span class="operator">(</span><span class="variable">$url</span><span class="operator">);</span>
+ <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">useService</span><span class="operator">(</span><span class="variable">$url</span><span class="operator">,</span> <span class="variable">$username</span><span class="operator">,</span> <span class="variable">$password</span><span class="operator">);</span>
+</pre>
+</dd>
+<dd>
+<p>Set the $url of the PHPRPC Server. $username and $password is for the HTTP Basic Authorization.</p>
+</dd>
+<dt><strong><a name="item_setkeylength">setKeyLength</a></strong>
+
+<dd>
+<pre>
+ <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">setKeyLength</span><span class="operator">(</span><span class="variable">$keyLength</span><span class="operator">);</span>
+</pre>
+</dd>
+<dd>
+<p>Set the key length for the key exchange. This method will return 0 when the key exchange already to be done.</p>
+</dd>
+<dt><strong><a name="item_getkeylength">getKeyLength</a></strong>
+
+<dd>
+<pre>
+ <span class="keyword">print</span> <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">getKeyLength</span><span class="operator">();</span>
+</pre>
+</dd>
+<dd>
+<p>Get the key length. This method will return actual value when the key exchange being done. Otherwise, you will get the default length or which length you set.</p>
+</dd>
+<dt><strong><a name="item_setencryptmode">setEncryptMode</a></strong>
+
+<dd>
+<pre>
+ <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">setEncryptMode</span><span class="operator">(</span><span class="variable">$encryptMode</span><span class="operator">);</span>
+</pre>
+</dd>
+<dd>
+<p>Set the encrypt mode. 0 denotes no encrypting any data. 1 denotes encrypting arguments in the transfer. 2 denotes encrypting arguments and result. 3 denotes encrypting arguments, result and output of the server console. Set other value, it would return false.</p>
+</dd>
+<dt><strong><a name="item_getencryptmode">getEncryptMode</a></strong>
+
+<dd>
+<pre>
+ <span class="keyword">print</span> <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">getEncryptMode</span><span class="operator">();</span>
+</pre>
+</dd>
+<dd>
+<p>Get the encrypt mode.</p>
+</dd>
+<dt><strong><a name="item_setcharset">setCharset</a></strong>
+
+<dd>
+<pre>
+ <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">setCharset</span><span class="operator">(</span><span class="variable">$charset</span><span class="operator">);</span>
+</pre>
+</dd>
+<dd>
+<p>Set the request charset. Use it before invoke the remote procedure. The default value is &quot;UTF-8&quot;.</p>
+</dd>
+<dt><strong><a name="item_getcharset">getCharset</a></strong>
+
+<dd>
+<pre>
+ <span class="keyword">print</span> <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">getCharset</span><span class="operator">();</span>
+</pre>
+</dd>
+<dd>
+<p>Get the response charset.</p>
+</dd>
+<dt><strong><a name="item_settimeout">setTimeout</a></strong>
+
+<dd>
+<pre>
+ <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">setTimeout</span><span class="operator">(</span><span class="variable">$timeout</span><span class="operator">);</span>
+</pre>
+</dd>
+<dd>
+<p>Set the timeout of the invoking of the remote procedure. the $timeout is the number of seconds. Default value is 30 seconds.</p>
+</dd>
+<dt><strong><a name="item_gettimeout">getTimeout</a></strong>
+
+<dd>
+<pre>
+ <span class="keyword">print</span> <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">getTimeout</span><span class="operator">();</span>
+</pre>
+</dd>
+<dd>
+<p>Get the timeout of the invoking the remote procedure. the return value is the number of seconds.</p>
+</dd>
+<dt><strong><a name="item_invoke">invoke</a></strong>
+
+<dd>
+<pre>
+ <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">invoke</span><span class="operator">(</span><span class="variable">$funcname</span><span class="operator">,</span> <span class="operator">\</span><span class="variable">@args</span><span class="operator">);</span>
+ <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">invoke</span><span class="operator">(</span><span class="variable">$funcname</span><span class="operator">,</span> <span class="operator">\</span><span class="variable">@args</span><span class="operator">,</span> <span class="variable">$byRef</span><span class="operator">);</span>
+</pre>
+</dd>
+<dd>
+<p>Invoke the remote procedure with the function name and arguments array. if you want to pass arguments by reference, set byRef to 1.</p>
+</dd>
+<dt><strong><a name="item_getoutput">getOutput</a></strong>
+
+<dd>
+<pre>
+ <span class="keyword">print</span> <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">getOutput</span><span class="operator">();</span>
+</pre>
+</dd>
+<dd>
+<p>Get the output of the server console after invoke the remote procedure.</p>
+</dd>
+<dt><strong><a name="item_getwarning">getWarning</a></strong>
+
+<dd>
+<pre>
+ <span class="keyword">my</span> <span class="variable">$warning</span> <span class="operator">=</span> <span class="variable">$client</span><span class="operator">-&gt;</span><span class="variable">getWarning</span><span class="operator">();</span>
+</pre>
+</dd>
+<dd>
+<p>Get the warning of the remote procedure after invoke the remote procedure.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="phprpc__error">PHPRPC::Error</a></h1>
+<p>
+</p>
+<h2><a name="methods">METHODS</a></h2>
+<dl>
+<dt><strong><a name="item_getnumber">getNumber</a></strong>
+
+<dd>
+<p>return error number</p>
+</dd>
+</li>
+<dt><strong><a name="item_getmessage">getMessage</a></strong>
+
+<dd>
+<p>return error message</p>
+</dd>
+</li>
+<dt><strong><a name="item_tostring">toString</a></strong>
+
+<dd>
+<p>return a string which include the error number and error message</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Ma Bingyao, &lt;andot[at]ujn.edu.cn&gt;</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p>Crypt::XXTEA</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>The implementation of the PHPRPC Client was developed by,
+and is copyright of, Ma Bingyao (<a href="mailto:andot@ujn.edu.cn">andot@ujn.edu.cn</a>)</p>
+
+</body>
+
+</html>

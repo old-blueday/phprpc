@@ -1,0 +1,34 @@
+<macromedia-extension
+	 name="PHPRPC Client Library for ActionScript 3.0"
+	 version="3.0.1"
+	 type="Flash component">
+
+	<author name="Ma Bingyao" />
+
+	<products>
+		<product name="Flash" version="9" primary="true" />
+	</products>
+
+	<description>
+	<![CDATA[
+	PHPRPC Client for ActionScript 3.0
+	]]>
+	</description>
+
+	<ui-access>
+	<![CDATA[
+	This PHPRPC Client Component is accessed by choosing Window > Components > Data > PHPRPC.
+	]]>
+	</ui-access>
+
+	<license-agreement>
+	<![CDATA[
+
+	]]>
+	</license-agreement>
+
+	<files>
+		<file source="PHPRPC_AS3.swc" destination="$flash/Components/Data" />
+	</files>
+
+</macromedia-extension>

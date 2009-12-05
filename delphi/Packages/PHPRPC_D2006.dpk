@@ -1,0 +1,63 @@
+package PHPRPC_D2006;
+
+{$R *.res}
+{$R 'PHPRPC.dcr'}
+{$ALIGN 8}
+{$ASSERTIONS OFF}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS OFF}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'PHPRPC 3.0 Component'}
+{$LIBVERSION '3.0'}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  IndyCore,
+  IndyProtocols,
+  inet;
+
+contains
+  Base64 in '..\Source\Base64.pas',
+  BigInt in '..\Source\BigInt.pas',
+  DHParams in '..\Source\DHParams.pas',
+  MD5 in '..\Source\MD5.pas',
+  XXTEA in '..\Source\XXTEA.pas',
+  PHPRPC in '..\Source\PHPRPC.pas',
+  ObjAutoX in '..\Source\ObjAutoX.pas',
+  PHPRPCServer in '..\Source\PHPRPCServer.pas',
+  PHPRPCClient in '..\Source\PHPRPCClient.pas',
+  blcksock in '..\Source\Synapse\blcksock.pas',
+  httpsend in '..\Source\Synapse\httpsend.pas',
+  synacode in '..\Source\Synapse\synacode.pas',
+  synafpc in '..\Source\Synapse\synafpc.pas',
+  synaip in '..\Source\Synapse\synaip.pas',
+  synautil in '..\Source\Synapse\synautil.pas',
+  synsock in '..\Source\Synapse\synsock.pas',
+  IOCPHttpServer in '..\Source\IOCP\IOCPHttpServer.pas',
+  IOCPTcpServer in '..\Source\IOCP\IOCPTcpServer.pas',
+  Winsock2 in '..\Source\IOCP\Winsock2.pas',
+  PHPRPCIdHttpClient in '..\Source\PHPRPCIdHttpClient.pas',
+  PHPRPCSynaHttpClient in '..\Source\PHPRPCSynaHttpClient.pas',
+  PHPRPCIdHttpServer in '..\Source\PHPRPCIdHttpServer.pas',
+  PHPRPCSynaHttpServer in '..\Source\PHPRPCSynaHttpServer.pas',
+  PHPRPCIOCPHttpServer in '..\Source\PHPRPCIOCPHttpServer.pas',
+  PHPRPCHttpWebBroker in '..\Source\PHPRPCHttpWebBroker.pas';
+
+end.

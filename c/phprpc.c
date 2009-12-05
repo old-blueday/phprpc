@@ -2,7 +2,7 @@
 |                                                          |
 | The implementation of PHPRPC Protocol 3.0                |
 |                                                          |
-| base64.h                                                 |
+| phprpc.c                                                 |
 |                                                          |
 | Release 3.0                                              |
 | Copyright by Team-PHPRPC                                 |
@@ -21,20 +21,12 @@
 |                                                          |
 \**********************************************************/
 
-/* Base64 library.
+/* PHPRPC library.
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Dec 5, 2009
+* LastModified: Dec 6, 2009
 * This library is free.  You can redistribute it and/or modify it.
 */
 
-#ifndef BASE64_INCLUDED
-#define BASE64_INCLUDED
-
 #include "phprpc.h"
-
-PHPRPCAPI char * base64_encode(const unsigned char * data, size_t len);
-PHPRPCAPI unsigned char * base64_decode(const char * string, size_t * out_len);
-
-#endif

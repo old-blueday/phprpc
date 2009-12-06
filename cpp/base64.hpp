@@ -117,6 +117,11 @@ namespace phprpc
 			return retval;
 		}
 
+		inline static std::string encode(const std::string & data)
+		{
+			return encode<std::string>(data);
+		}
+		
 		/**
 		 * Method:   decode
 		 * FullName: phprpc::base64::decode<Type>
@@ -161,6 +166,11 @@ namespace phprpc
 
 			return retval;
 		}
+
+		inline static std::string decode(const std::string & data)
+		{
+			return decode<std::string>(data);
+		}		
 		
 	}; // class base64
 	

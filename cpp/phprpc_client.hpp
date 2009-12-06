@@ -451,7 +451,7 @@ namespace phprpc
 								std::string strval;
 								document.seekg(1, std::ios::cur);
 								getline(document, strval, '"');
-								retval[line] = base64::decode(strval);
+								retval[line] = base64::decode<std::string>(strval);
 							};
 							document.ignore(100, '\n');
 						}

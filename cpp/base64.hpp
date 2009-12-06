@@ -66,12 +66,14 @@ namespace phprpc
 
 		/**
 		 * Method:   encode
-		 * FullName: phprpc::base64::encode
-		 * Access:   public static  
+		 * FullName: phprpc::base64::encode<Type>
+		 * Access:   public static
+         * $Type:    std::string, std::vector<char>, std::vector<signed char>, std::vector<unsigned char>		 
 		 * @data:    Data to be encoded
 		 * Returns:  Encoded data
 		 */
-		static std::string encode(const std::string & data)
+		template<typename Type>
+		static std::string encode(const Type & data)
 		{
 			std::string retval;
 
@@ -81,7 +83,7 @@ namespace phprpc
 			size_t rem  = data.size() % 3;
 			retval.reserve((quot + 1) * 4);
 
-			std::string::const_iterator iter = data.begin();
+			Type::const_iterator iter = data.begin();
 
 			for (size_t i = 0; i < quot; i++)
 			{
@@ -117,14 +119,16 @@ namespace phprpc
 
 		/**
 		 * Method:   decode
-		 * FullName: phprpc::base64::decode
-		 * Access:   public static  
+		 * FullName: phprpc::base64::decode<Type>
+		 * Access:   public static
+         * $Type:    std::string, std::vector<char>, std::vector<signed char>, std::vector<unsigned char>		 
 		 * @data:    Data to be decodeed
 		 * Returns:  Decodeed data
 		 */
-		static std::string decode(const std::string & data)
+		template<typename Type>
+		static Type decode(const std::string & data)
 		{
-			std::string retval;
+			Type retval;
 
 			if (data.empty()) return retval;
 

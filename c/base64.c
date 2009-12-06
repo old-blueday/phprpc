@@ -25,7 +25,7 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Dec 5, 2009
+* LastModified: Dec 6, 2009
 * This library is free.  You can redistribute it and/or modify it.
 */
 
@@ -162,6 +162,8 @@ unsigned char * base64_decode(const char * string, size_t * out_len)
 			}
 		}
 	}
-
+	
+	*out_len = pos - out;
+	
 	return out;
 }

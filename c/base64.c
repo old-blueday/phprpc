@@ -74,7 +74,7 @@ char * base64_encode(const unsigned char * data, size_t len)
 	
 	quot = len / 3;
 	rem  = len % 3;
-	out = malloc((quot + 1) * 4 + 1);
+	out = (char *)malloc((quot + 1) * 4 + 1);
 	if (!out) return NULL;
 	
 	in  = data;
@@ -129,8 +129,6 @@ unsigned char * base64_decode(const char * string, size_t * out_len)
 	size_t i, len, quot, rem;
 	int c;
 	
-	if (!string) return NULL;
-	
 	len = strlen(string);
 	if (!len) return NULL;
 	
@@ -138,7 +136,7 @@ unsigned char * base64_decode(const char * string, size_t * out_len)
 	if (rem) return NULL;
 	
 	quot = len / 4;
-	out = malloc(quot * 3);
+	out = (unsigned char *)malloc(quot * 3 + 1);
 	if (!out) return NULL;
 
 	in  = string;
@@ -163,6 +161,7 @@ unsigned char * base64_decode(const char * string, size_t * out_len)
 		}
 	}
 	
+	*pos = '\0';
 	*out_len = pos - out;
 	
 	return out;

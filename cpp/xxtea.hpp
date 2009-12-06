@@ -25,7 +25,7 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Nov 28, 2009
+* LastModified: Dec 6, 2009
 * This library is free.  You can redistribute it and/or modify it.
 */
 
@@ -34,6 +34,7 @@
 
 #include "common.hpp"
 
+#define Mx (((z >> 5) ^ (y << 2)) + ((y >> 3) ^ (z << 4))) ^ ((sum ^ y) + (key[(p & 3) ^ e] ^ z))
 #define Delta 0x9e3779b9
 
 namespace phprpc
@@ -42,50 +43,77 @@ namespace phprpc
 	{
 	public:
 
-		static std::string encrypt(const std::string & data, const std::string & key)
+		/**
+		 * Method:   encrypt
+		 * FullName: phprpc::xxtea::encrypt<Type>
+		 * Access:   public static
+		 * $Type:    std::string, std::vector<char>, std::vector<signed char>, std::vector<unsigned char>		 
+		 * @data:    Data to be encrypted
+		 * @key:     Symmetric key
+		 * Returns:  Encrypted data
+		 */
+		template<typename Type> 
+		static std::string encrypt(const Type & data, const std::string & key)
 		{
-			if (data.empty())
-			{
-				return data;
-			}
+			if (data.empty()) return data;
 
-            std::vector<uint> data_array = str_to_array(data, true);
-            std::vector<uint> key_array  = str_to_array(key, false);
+            std::vector<uint> data_array = to_uint_array(data, true);
+            std::vector<uint> key_array  = to_uint_array(key, false);
 
-			return array_to_str(encrypt(data_array, key_array), false);
+			if (key_array.size() < 4) key_array.resize(4);
+			
+			return to_ubyte_array<std::string>(encrypt(data_array, key_array), false);
+		}
+		
+		inline static std::string encrypt(const std::string & data, const std::string & key)
+		{
+			return encrypt<std::string>(data, key);
 		}
 
-		static std::string decrypt(const std::string & data, const std::string & key)
+		/**
+		 * Method:   decrypt
+		 * FullName: phprpc::xxtea::decrypt<Type>
+		 * Access:   public static
+		 * $Type:    std::string, std::vector<char>, std::vector<signed char>, std::vector<unsigned char>		 
+		 * @data:    Data to be decrypted
+		 * @key:     Symmetric key
+		 * Returns:  Decrypted data
+		 */
+		template<typename Type>
+		static Type decrypt(const std::string & data, const std::string & key)
 		{
-			if (data.empty())
-			{
-				return data;
-			}
+			if (data.empty()) return data;
 
-            std::vector<uint> data_array = str_to_array(data, false);
-            std::vector<uint> key_array  = str_to_array(key, false);
+            std::vector<uint> data_array = to_uint_array(data, false);
+            std::vector<uint> key_array  = to_uint_array(key, false);
 
-			return array_to_str(decrypt(data_array, key_array), true);
+			if (key_array.size() < 4) key_array.resize(4);
+			
+			return to_ubyte_array<Type>(decrypt(data_array, key_array), true);
 		}
 
+		inline static std::string decrypt(const std::string & data, const std::string & key)
+		{
+			return decrypt<std::string>(data, key);
+		}		
+		
 	private:
 
-		static std::vector<uint> encrypt(std::vector<uint> & v, std::vector<uint> & k)
+		/**
+		 * Method:   encrypt
+		 * FullName: phprpc::xxtea::encrypt
+		 * Access:   private static 
+		 * @data:    Data to be encrypted
+		 * @key:     Symmetric key
+		 * Returns:  Encrypted data
+		 */
+		static std::vector<uint> & encrypt(std::vector<uint> & data, std::vector<uint> & key)
 		{
-			int n = v.size() - 1;
+			size_t n = data.size() - 1;
 
-			if (n < 1)
-			{
-				return v;
-			}
-
-			if (k.size() < 4)
-			{
-				k.resize(4);
-			}
-
-			uint z = v[n], y = v[0], sum = 0, e;
-			int p, q = 6 + 52 / (n + 1);
+			if (n < 1) return data;
+			
+			uint z = data[n], y = data[0], p, q = 6 + 52 / (n + 1), sum = 0, e;
 
 			while (0 < q--)
 			{
@@ -94,35 +122,32 @@ namespace phprpc
 
 				for (p = 0; p < n; p++)
 				{
-					y = v[p + 1];
-					z = v[p] += (((z >> 5) ^ (y << 2)) + ((y >> 3) ^ (z << 4))) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
+					y = data[p + 1];
+					z = data[p] += Mx;
 				}
 
-				y = v[0];
-				z = v[n] += (((z >> 5) ^ (y << 2)) + ((y >> 3) ^ (z << 4))) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
+				y = data[0];
+				z = data[n] += Mx;
 			}
 
-			return v;
+			return data;
 		}
 
-		static std::vector<uint> decrypt(std::vector<uint> & v, std::vector<uint> & k)
+		/**
+		 * Method:   decrypt
+		 * FullName: phprpc::xxtea::decrypt
+		 * Access:   private static 
+		 * @data:    Data to be decrypted
+		 * @key:     Symmetric key
+		 * Returns:  Decrypted data
+		 */
+		static std::vector<uint> & decrypt(std::vector<uint> & data, std::vector<uint> & key)
 		{
-			int n = v.size() - 1;
+			size_t n = data.size() - 1;
 
-			if (n < 1)
-			{
-				return v;
-			}
+			if (n < 1) return data;
 
-			if (k.size() < 4)
-			{
-				k.resize(4);
-			}
-
-			uint z = v[n], y = v[0], sum, e;
-			int p, q = 6 + 52 / (n + 1);
-
-			sum = (uint)(q * Delta);
+			uint z = data[n], y = data[0], p, q = 6 + 52 / (n + 1), sum = (uint)(q * Delta), e;
 
 			while (sum != 0)
 			{
@@ -130,68 +155,81 @@ namespace phprpc
 
 				for (p = n; p > 0; p--)
 				{
-					z = v[p - 1];
-					y = v[p] -= (((z >> 5) ^ (y << 2)) + ((y >> 3) ^ (z << 4))) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
+					z = data[p - 1];
+					y = data[p] -= Mx;
 				}
 
-				z = v[n];
-				y = v[0] -= (((z >> 5) ^ (y << 2)) + ((y >> 3) ^ (z << 4))) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
+				z = data[n];
+				y = data[0] -= Mx;
 				sum -= Delta;
 			}
 
-			return v;
+			return data;
 		}
 
-		static std::vector<uint> str_to_array(const std::string & data, const bool include_length)
+		/**
+		 * Method:   to_uint_array
+		 * FullName: phprpc::xxtea::to_uint_array<Type>
+		 * Access:   private static
+		 * $Type:    std::string, std::vector<char>, std::vector<signed char>, std::vector<unsigned char>		 
+		 * @data:    Data to be converted
+		 * @inc_len: Including the length of the information?
+		 * Returns:  UInt array
+		 */	
+		template<typename Type>
+		static std::vector<uint> to_uint_array(const Type & data, const bool inc_len)
 		{
-            int length = data.size();
-            int n = (((length & 3) == 0) ? (length >> 2) : ((length >> 2) + 1));
-
 			std::vector<uint> retval;
+			
+            size_t len = data.size();
+            size_t n = (((len & 3) == 0) ? (len >> 2) : ((len >> 2) + 1));
 
-            if (include_length)
+            if (inc_len)
 			{
 				retval.resize(n + 1);
-                retval[n] = length;
+                *retval.rbegin() = len;
             }
             else
 			{
                 retval.resize(n);
             }
 
-            for (int i = 0; i < length; i++)
+            for (size_t i = 0; i < len; i++)
 			{
-                retval[i >> 2] |= (ubyte)data[i] << ((i & 3) << 3);
+                retval[i >> 2] |= (uint)(ubyte)(data[i]) << ((i & 3) << 3);
             }
 
             return retval;
 		}
 
-		static std::string array_to_str(const std::vector<uint> & data, const bool include_length)
+		/**
+		 * Method:   to_ubyte_array
+		 * FullName: phprpc::xxtea::to_ubyte_array<Type>
+		 * Access:   private static
+		 * $Type:    std::string, std::vector<char>, std::vector<signed char>, std::vector<unsigned char>		 
+		 * @data:    Data to be converted
+		 * @inc_len: Included the length of the information?
+		 * Returns:  UByte array
+		 */
+		template<typename Type>		 
+		static Type to_ubyte_array(const std::vector<uint> & data, const bool inc_len)
 		{
-			int length = data.size();
-			int n = length << 2;
-
-			std::string retval;
-
-			if (include_length)
+			Type retval;
+			
+			size_t n = data.size() << 2;
+			
+			if (inc_len)
 			{
-				int m = (int)data[length - 1];
-				if (m > n)
-				{
-					return retval;
-				}
-				else
-				{
-					n = m;
-				}
+				size_t m = *data.rbegin();
+				if (m > n) return retval;
+				n = m;
 			}
 
-			retval.resize(n);
+			retval.reserve(n);
 
-			for (int i = 0; i < n; i++)
+			for (size_t i = 0; i < n; i++)
 			{
-				retval[i] = (char)(data[i >> 2] >> ((i & 3) << 3));
+				retval.push_back(data[i >> 2] >> ((i & 3) << 3));
 			}
 
 			return retval;

@@ -149,7 +149,7 @@ unsigned int * xxtea_uint_encrypt(unsigned int * data, size_t len, unsigned int 
 unsigned int * xxtea_uint_decrypt(unsigned int * data, size_t len, unsigned int * key)
 {
 	size_t n = len - 1;
-	unsigned int z = data[n], y = data[0], p, q = 6 + 52 / (n + 1), sum = (unsigned int)(q * DELTA), e;
+	unsigned int z = data[n], y = data[0], p, q = 6 + 52 / (n + 1), sum = q * DELTA, e;
 
 	if (n < 1) return data;
 	

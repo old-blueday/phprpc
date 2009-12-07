@@ -147,7 +147,7 @@ namespace phprpc
 
 			if (n < 1) return data;
 
-			uint z = data[n], y = data[0], p, q = 6 + 52 / (n + 1), sum = (uint)(q * Delta), e;
+			uint z = data[n], y = data[0], p, q = 6 + 52 / (n + 1), sum = q * Delta, e;
 
 			while (sum != 0)
 			{

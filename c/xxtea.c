@@ -177,7 +177,7 @@ unsigned int * xxtea_uint_decrypt(unsigned int * data, size_t len, unsigned int 
  * @len:     Length of the data to be encrypted
  * @key:     Symmetric key
  * @out_len: Pointer to output length variable 
- * Returns:  Encrypted data
+ * Returns:  Encrypted data or %NULL on failure
  *
  * Caller is responsible for freeing the returned buffer.
  */
@@ -202,7 +202,7 @@ unsigned char * xxtea_encrypt(const unsigned char * data, size_t len, const unsi
  * @len:     Length of the data to be decrypted
  * @key:     Symmetric key
  * @out_len: Pointer to output length variable 
- * Returns:  Decrypted data
+ * Returns:  Decrypted data or %NULL on failure
  *
  * Caller is responsible for freeing the returned buffer.
  */

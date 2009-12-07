@@ -53,7 +53,7 @@ namespace phprpc
 		 * Returns:  Encrypted data
 		 */
 		template<typename Type> 
-		static std::string encrypt(const Type & data, const std::string & key)
+		static Type encrypt(const Type & data, const std::string & key)
 		{
 			if (data.empty()) return data;
 
@@ -80,7 +80,7 @@ namespace phprpc
 		 * Returns:  Decrypted data
 		 */
 		template<typename Type>
-		static Type decrypt(const std::string & data, const std::string & key)
+		static Type decrypt(const Type & data, const std::string & key)
 		{
 			if (data.empty()) return data;
 

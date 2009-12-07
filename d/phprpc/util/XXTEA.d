@@ -31,11 +31,11 @@
 
 module phprpc.util.XXTEA;
 
-import tango.io.Stdout;
-
 final class XXTEA
 {
-    private static const uint Delta = 0x9e3779b9;
+    private const uint delta = 0x9e3779b9;
+
+    private this() {}
 
     /**
      * Method:   encrypt
@@ -49,17 +49,12 @@ final class XXTEA
     {
         if (data.length == 0) return data;
 
-        uint[] data_array = to_uint_array(data, true);
-        uint[] key_array  = to_uint_array(key, false);
-
-        if (key_array.length < 4) key_array.length = 4;
-
-        return to_ubyte_array(encrypt(data_array, key_array), false);
+        return toUByteArray(encrypt(toUIntArray(data, true), toUIntArray(key, false)), false);
     }
 
     /**
      * Method:   decrypt
-     * FullName: XXTEA.decrypt<Type>
+     * FullName: XXTEA.decrypt
      * Access:   public static
      * @data:    Data to be decrypted
      * @key:     Symmetric key
@@ -69,12 +64,7 @@ final class XXTEA
     {
         if (data.length == 0) return data;
 
-        uint[] data_array = to_uint_array(data, false);
-        uint[] key_array  = to_uint_array(key, false);
-
-        if (key_array.length < 4) key_array.length = 4;
-
-        return to_ubyte_array(decrypt(data_array, key_array), true);
+        return toUByteArray(decrypt(toUIntArray(data, false), toUIntArray(key, false)), true);
     }
 
     /**
@@ -91,11 +81,13 @@ final class XXTEA
 
         if (n < 1) return data;
 
+        if (key.length < 4) key.length = 4;
+
         uint z = data[n], y = data[0], p, q = 6 + 52 / (n + 1), sum = 0, e;
 
         while (0 < q--)
         {
-            sum += Delta;
+            sum += delta;
             e = sum >> 2 & 3;
 
             for (p = 0; p < n; p++)
@@ -125,7 +117,9 @@ final class XXTEA
 
         if (n < 1) return data;
 
-        uint z = data[n], y = data[0], p, q = 6 + 52 / (n + 1), sum = q * Delta, e;
+        if (key.length < 4) key.length = 4;
+
+        uint z = data[n], y = data[0], p, q = 6 + 52 / (n + 1), sum = q * delta, e;
 
         while (sum != 0)
         {
@@ -139,74 +133,74 @@ final class XXTEA
 
             z = data[n];
             y = data[0] -= (((z >> 5) ^ (y << 2)) + ((y >> 3) ^ (z << 4))) ^ ((sum ^ y) + (key[(p & 3) ^ e] ^ z));
-            sum -= Delta;
+            sum -= delta;
         }
 
         return data;
     }
 
     /**
-     * Method:   to_uint_array
-     * FullName: XXTEA.to_uint_array
+     * Method:   toUIntArray
+     * FullName: XXTEA.toUIntArray
      * Access:   private static
      * @data:    Data to be converted
-     * @inc_len: Including the length of the information?
+     * @incLen: Including the length of the information?
      * Returns:  UInt array
      */
-    private static uint[] to_uint_array(ubyte[] data, bool inc_len)
+    private static uint[] toUIntArray(ubyte[] data, bool incLen)
     {
-        uint[] rtn;
+        uint[] result;
 
         uint len = data.length;
         uint n = (((len & 3) == 0) ? (len >> 2) : ((len >> 2) + 1));
 
-        if (inc_len)
+        if (incLen)
         {
-            rtn.length = n + 1;
-            rtn[n] = len;
+            result.length = n + 1;
+            result[n] = len;
         }
         else
         {
-            rtn.length = n;
+            result.length = n;
         }
 
         for (uint i = 0; i < len; i++)
         {
-            rtn[i >> 2] |= cast(uint) data[i] << ((i & 3) << 3);
+            result[i >> 2] |= data[i] << ((i & 3) << 3);
         }
 
-        return rtn;
+        return result;
     }
 
     /**
-     * Method:   to_ubyte_array
-     * FullName: XXTEA.to_ubyte_array
+     * Method:   toUByteArray
+     * FullName: XXTEA.toUByteArray
      * Access:   private static
      * @data:    Data to be converted
-     * @inc_len: Included the length of the information?
+     * @incLen: Included the length of the information?
      * Returns:  UByte array
      */
-    private static ubyte[] to_ubyte_array(uint[] data, bool inc_len)
+    private static ubyte[] toUByteArray(uint[] data, bool incLen)
     {
-        ubyte[] rtn;
+        ubyte[] result;
 
         uint n = data.length << 2;
 
-        if (inc_len)
+        if (incLen)
         {
             uint m = data[length - 1];
-            if (m > n) return rtn;
+            if (m > n) return result;
             n = m;
         }
 
-        rtn.length = n;
+        result.length = n;
 
         for (uint i = 0; i < n; i++)
         {
-            rtn[i] = cast(uint) (data[i >> 2] >> ((i & 3) << 3));
+            result[i] = data[i >> 2] >> ((i & 3) << 3);
         }
 
-        return rtn;
+        return result;
     }
 
 }

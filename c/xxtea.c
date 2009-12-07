@@ -108,11 +108,11 @@ unsigned char * xxtea_to_ubyte_array(const unsigned int * data, size_t len, int 
 }
 
 /**
- * Method:   xxtea_uint_encrypt
- * @data:    Data to be encrypted
- * @len:     Length of the data to be encrypted
- * @key:     Symmetric key
- * Returns:  Encrypted data
+ * Method:  xxtea_uint_encrypt
+ * @data:   Data to be encrypted
+ * @len:    Length of the data to be encrypted
+ * @key:    Symmetric key
+ * Returns: Encrypted data
  */
 unsigned int * xxtea_uint_encrypt(unsigned int * data, size_t len, unsigned int * key)
 {
@@ -140,11 +140,11 @@ unsigned int * xxtea_uint_encrypt(unsigned int * data, size_t len, unsigned int 
 }
 
 /**
- * Method:   xxtea_uint_decrypt
- * @data:    Data to be decrypted
- * @len:     Length of the data to be decrypted
- * @key:     Symmetric key
- * Returns:  Decrypted data
+ * Method:  xxtea_uint_decrypt
+ * @data:   Data to be decrypted
+ * @len:    Length of the data to be decrypted
+ * @key:    Symmetric key
+ * Returns: Decrypted data
  */
 unsigned int * xxtea_uint_decrypt(unsigned int * data, size_t len, unsigned int * key)
 {
@@ -172,7 +172,7 @@ unsigned int * xxtea_uint_decrypt(unsigned int * data, size_t len, unsigned int 
 }
 
 /**
- * Method:   encrypt
+ * Method:   xxtea_encrypt
  * @data:    Data to be encrypted
  * @len:     Length of the data to be encrypted
  * @key:     Symmetric key
@@ -197,7 +197,7 @@ unsigned char * xxtea_encrypt(const unsigned char * data, size_t len, const unsi
 }
 
 /**
- * Method:   decrypt
+ * Method:   xxtea_decrypt
  * @data:    Data to be decrypted
  * @len:     Length of the data to be decrypted
  * @key:     Symmetric key

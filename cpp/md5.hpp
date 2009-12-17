@@ -61,8 +61,17 @@ namespace phprpc
 	class md5
 	{
 	public:
-	
-		static std::string raw(const std::string & data)
+
+		/**
+		 * Method:   raw
+		 * FullName: phprpc::md5::raw<Type>
+		 * Access:   public static
+		 * $Type:    std::string, std::vector<char>, std::vector<signed char>, std::vector<unsigned char>
+		 * @data:    Data to be digested
+		 * Returns:  Raw digested data
+		 */
+		template<typename Type>		 
+		static std::string raw(const Type & data)
 		{
 			std::vector<uint> x;
 			
@@ -71,7 +80,7 @@ namespace phprpc
 			
 			x.resize(count);
 			
-			for (uint i = 0; i < data.size(); i++)
+			for (uint i = 0; i < len; i++)
 			{
 				x[i >> 2] |= ((ubyte)data[i]) << ((i & 3) << 3);
 			}
@@ -193,8 +202,17 @@ namespace phprpc
 
 			return retval;
 		}
-	
-		static std::string hex(const std::string & data)
+
+		/**
+		 * Method:   hex
+		 * FullName: phprpc::md5::hex<Type>
+		 * Access:   public static
+		 * $Type:    std::string, std::vector<char>, std::vector<signed char>, std::vector<unsigned char>
+		 * @data:    Data to be digested
+		 * Returns:  Hex digested data
+		 */
+		template<typename Type>		
+		static std::string hex(const Type & data)
 		{
 			std::ostringstream ss;
 

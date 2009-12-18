@@ -59,14 +59,15 @@ static const char Base64DecodeChars[] =
  * Method:   base64_encode
  * @data:    Data to be encoded
  * @len:     Length of the data to be encoded
+ * @out_len: Pointer to output length variable
  * Returns:  Encoded data or %NULL on failure
  *
  * Caller is responsible for freeing the returned buffer.
  */
-char * base64_encode(const unsigned char * data, size_t len)
+unsigned char * base64_encode(const unsigned char * data, size_t len, size_t * out_len)
 {
-	char *out, *pos;
-	const unsigned char *in;
+	unsigned char *out, *pos;
+	const unsigned char *in = data;
 	size_t i, quot, rem;
 	int c;
 
@@ -74,12 +75,11 @@ char * base64_encode(const unsigned char * data, size_t len)
 	
 	quot = len / 3;
 	rem  = len % 3;
-	out = (char *)malloc((quot + 1) * 4 + 1);
+	out = (unsigned char *)malloc((quot + (rem ? 1 : 0)) * 4 + 1);
 	if (!out) return NULL;
-	
-	in  = data;
-	pos = out;
 
+	pos = out;
+	
 	for (i = 0; i < quot; i++)
 	{
 		c  = (0x000000ff & *in++) << 16;
@@ -110,6 +110,7 @@ char * base64_encode(const unsigned char * data, size_t len)
 	}
 
 	*pos = '\0';
+	*out_len = pos - out;
 	
 	return out;
 }
@@ -117,29 +118,32 @@ char * base64_encode(const unsigned char * data, size_t len)
 /**
  * Method:   base64_decode
  * @string:  Data to be decoded
+ * @len:     Length of the data to be encoded
  * @out_len: Pointer to output length variable
  * Returns:  Decoded data or %NULL on failure
  *
  * Caller is responsible for freeing the returned buffer.
  */
-unsigned char * base64_decode(const char * string, size_t * out_len)
+unsigned char * base64_decode(const unsigned char * data, size_t len, size_t * out_len)
 {
 	unsigned char *out, *pos;
-	const char *in;
-	size_t i, len, quot, rem;
+	const unsigned char *in = data;
+	size_t i, quot, rem, paddings = 0;
 	int c;
 	
-	len = strlen(string);
 	if (!len) return NULL;
 	
 	rem = len % 4;
-	if (rem) return NULL;
+	if (rem) return NULL; // invalid size
 	
 	quot = len / 4;
-	out = (unsigned char *)malloc(quot * 3 + 1);
+	if (data[len - 2] == '=')
+		paddings = 2;
+	else if (data[len - 1] == '=')
+		paddings = 1;
+	out = (unsigned char *)malloc(quot * 3 - paddings + 1);
 	if (!out) return NULL;
 
-	in  = string;
 	pos = out;	
 	
 	for (i = 0; i < quot; i++)
@@ -166,3 +170,45 @@ unsigned char * base64_decode(const char * string, size_t * out_len)
 	
 	return out;
 }
+
+#ifdef PHPRPC_UNITTEST
+void base64_encode_test_io(const char * in, const char * known)
+{
+	unsigned char *out;
+	size_t out_len;
+	
+	out = base64_encode((unsigned char *)in, strlen(in), &out_len);
+	assert((strcmp((char *)out, known) == 0) && (out_len == strlen(known)));
+	free(out);
+}
+
+void base64_encode_test()
+{
+	base64_encode_test_io("f", "Zg==");
+	base64_encode_test_io("fo", "Zm8=");
+	base64_encode_test_io("foo", "Zm9v");
+	base64_encode_test_io("foos", "Zm9vcw==");
+	base64_encode_test_io("all your base64 are belong to foo", "YWxsIHlvdXIgYmFzZTY0IGFyZSBiZWxvbmcgdG8gZm9v");
+}
+
+void base64_decode_test_io(const char * in)
+{
+	unsigned char *encode_out, *decode_out;
+	size_t encode_out_len, decode_out_len;
+
+	encode_out = base64_encode(in, strlen(in), &encode_out_len);
+	decode_out = base64_decode(encode_out, encode_out_len, &decode_out_len);
+	assert((strcmp((char *)decode_out, in) == 0) && (decode_out_len == strlen(in)));
+	free(encode_out);
+	free(decode_out);
+}
+
+void base64_decode_test()
+{
+	base64_decode_test_io("f");
+	base64_decode_test_io("fo");
+	base64_decode_test_io("foo");
+	base64_decode_test_io("foos");
+	base64_decode_test_io("all your base64 are belong to foo");
+}
+#endif

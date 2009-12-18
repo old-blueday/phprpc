@@ -58,6 +58,7 @@
 	#endif
 #endif
 
+#include <assert.h>
 #include <malloc.h>
 #include <string.h>
 

@@ -117,8 +117,8 @@ unsigned char * base64_encode(const unsigned char * data, size_t len, size_t * o
 
 /**
  * Method:   base64_decode
- * @string:  Data to be decoded
- * @len:     Length of the data to be encoded
+ * @data:    Data to be decoded
+ * @len:     Length of the data to be decoded
  * @out_len: Pointer to output length variable
  * Returns:  Decoded data or %NULL on failure
  *

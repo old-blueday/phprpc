@@ -27,7 +27,7 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Dec 01, 2009
+* LastModified: Dec 18, 2009
 * This library is free.  You can redistribute it and/or modify it.
 */
 
@@ -35,9 +35,6 @@
 #define PHPRPC_COMMON_INCLUDED
 
 #include <curl/curl.h>
-#ifndef __GNUC__
-#pragma comment(lib, "curllib.lib")
-#endif
 
 #include <algorithm>
 #include <iomanip>
@@ -77,7 +74,7 @@
 #define MaxInt        2147483647
 #define MinInt      (-2147483647-1)
 
-inline void * operator new(unsigned int size, void * ptr, int le, char ch)
+inline void * operator new(size_t size, void * ptr, int le, char ch)
 {     
 	return ptr;
 };

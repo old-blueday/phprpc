@@ -25,7 +25,7 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Dec 5, 2009
+* LastModified: Dec 18, 2009
 * This library is free.  You can redistribute it and/or modify it.
 */
 
@@ -170,7 +170,27 @@ namespace phprpc
 		inline static std::string decode(const std::string & data)
 		{
 			return decode<std::string>(data);
-		}		
+		}
+	
+	#ifdef PHPRPC_UNITTEST
+		static void encode_test()
+		{
+			assert(encode(std::string("f")) == "Zg==");
+			assert(encode(std::string("fo")) == "Zm8=");
+			assert(encode(std::string("foo")) == "Zm9v");
+			assert(encode(std::string("foos")) == "Zm9vcw==");
+			assert(encode(std::string("all your base64 are belong to foo")) == "YWxsIHlvdXIgYmFzZTY0IGFyZSBiZWxvbmcgdG8gZm9v");		
+		}
+		
+		static void decode_test()
+		{
+			assert(decode(encode(std::string("f"))) == "f");
+			assert(decode(encode(std::string("fo"))) == "fo");
+			assert(decode(encode(std::string("foo"))) == "foo");
+			assert(decode(encode(std::string("foos"))) == "foos");
+			assert(decode(encode(std::string("all your base64 are belong to foo"))) == "all your base64 are belong to foo");				
+		}
+	#endif
 		
 	}; // class base64
 	

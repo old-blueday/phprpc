@@ -25,7 +25,7 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Dec 18, 2009
+* LastModified: Dec 19, 2009
 * This library is free.  You can redistribute it and/or modify it.
 */
 
@@ -34,12 +34,20 @@
 
 #include "phprpc.h"
 
-PHPRPCAPI unsigned char * base64_encode(const unsigned char * data, size_t len, size_t * out_len);
-PHPRPCAPI unsigned char * base64_decode(const unsigned char * data, size_t len, size_t * out_len);
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
+PHPRPCAPI char * base64_encode(const unsigned char * data, size_t len);
+PHPRPCAPI unsigned char * base64_decode(const char * data, size_t * out_len);
 
 #ifdef PHPRPC_UNITTEST
 PHPRPCAPI void base64_encode_test();
 PHPRPCAPI void base64_decode_test();
+#endif
+
+#ifdef  __cplusplus
+}
 #endif
 
 #endif

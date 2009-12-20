@@ -25,7 +25,7 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Dec 18, 2009
+* LastModified: Dec 19, 2009
 * This library is free.  You can redistribute it and/or modify it.
 */
 
@@ -59,14 +59,13 @@ static const char Base64DecodeChars[] =
  * Method:   base64_encode
  * @data:    Data to be encoded
  * @len:     Length of the data to be encoded
- * @out_len: Pointer to output length variable
  * Returns:  Encoded data or %NULL on failure
  *
  * Caller is responsible for freeing the returned buffer.
  */
-unsigned char * base64_encode(const unsigned char * data, size_t len, size_t * out_len)
+char * base64_encode(const unsigned char * data, size_t len)
 {
-	unsigned char *out, *pos;
+	char *out, *pos;
 	const unsigned char *in = data;
 	size_t i, quot, rem;
 	int c;
@@ -75,7 +74,7 @@ unsigned char * base64_encode(const unsigned char * data, size_t len, size_t * o
 	
 	quot = len / 3;
 	rem  = len % 3;
-	out = (unsigned char *)malloc((quot + (rem ? 1 : 0)) * 4 + 1);
+	out = (char *)malloc((quot + (rem ? 1 : 0)) * 4 + 1);
 	if (!out) return NULL;
 
 	pos = out;
@@ -110,7 +109,6 @@ unsigned char * base64_encode(const unsigned char * data, size_t len, size_t * o
 	}
 
 	*pos = '\0';
-	*out_len = pos - out;
 	
 	return out;
 }
@@ -118,19 +116,19 @@ unsigned char * base64_encode(const unsigned char * data, size_t len, size_t * o
 /**
  * Method:   base64_decode
  * @data:    Data to be decoded
- * @len:     Length of the data to be decoded
  * @out_len: Pointer to output length variable
  * Returns:  Decoded data or %NULL on failure
  *
  * Caller is responsible for freeing the returned buffer.
  */
-unsigned char * base64_decode(const unsigned char * data, size_t len, size_t * out_len)
+unsigned char * base64_decode(const char * data, size_t * out_len)
 {
 	unsigned char *out, *pos;
 	const unsigned char *in = data;
-	size_t i, quot, rem, paddings = 0;
+	size_t i, len, quot, rem, paddings = 0;
 	int c;
 	
+	len = strlen(data);
 	if (!len) return NULL;
 	
 	rem = len % 4;
@@ -174,11 +172,10 @@ unsigned char * base64_decode(const unsigned char * data, size_t len, size_t * o
 #ifdef PHPRPC_UNITTEST
 void base64_encode_test_io(const char * in, const char * known)
 {
-	unsigned char *out;
-	size_t out_len;
+	char *out;
 	
-	out = base64_encode((unsigned char *)in, strlen(in), &out_len);
-	assert((strcmp((char *)out, known) == 0) && (out_len == strlen(known)));
+	out = base64_encode((unsigned char *)in, strlen(in));
+	assert(strcmp(out, known) == 0);
 	free(out);
 }
 
@@ -193,12 +190,13 @@ void base64_encode_test()
 
 void base64_decode_test_io(const char * in)
 {
-	unsigned char *encode_out, *decode_out;
-	size_t encode_out_len, decode_out_len;
+	char *encode_out;
+	unsigned char *decode_out;
+	size_t out_len;
 
-	encode_out = base64_encode(in, strlen(in), &encode_out_len);
-	decode_out = base64_decode(encode_out, encode_out_len, &decode_out_len);
-	assert((strcmp((char *)decode_out, in) == 0) && (decode_out_len == strlen(in)));
+	encode_out = base64_encode((unsigned char *)in, strlen(in));
+	decode_out = base64_decode(encode_out, &out_len);
+	assert((strcmp((char *)decode_out, in) == 0) && (out_len == strlen(in)));
 	free(encode_out);
 	free(decode_out);
 }

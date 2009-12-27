@@ -188,7 +188,7 @@ static unsigned int * xxtea_uint_decrypt(unsigned int * data, size_t len, unsign
  *
  * Caller is responsible for freeing the returned buffer.
  */
-unsigned char * xxtea_encrypt(const unsigned char * data, size_t len, const unsigned char * key, size_t * out_len)
+static unsigned char * xxtea_encrypt(const unsigned char * data, size_t len, const unsigned char * key, size_t * out_len)
 {
 	unsigned int *data_array, *key_array;
 	size_t data_len, key_len;

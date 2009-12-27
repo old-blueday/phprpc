@@ -25,7 +25,7 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Dec 17, 2009
+* LastModified: Dec 27, 2009
 * This library is free.  You can redistribute it and/or modify it.
 */
 
@@ -55,15 +55,18 @@ static const unsigned int Md5Sine[64] =
  * Method:   raw_md5
  * @data:    Data to be digested
  * @len:     Length of the data to be digested
+ * @md:      Raw digested result buffer
  * Returns:  Raw digested data or %NULL on failure
  */
-unsigned char * raw_md5(const unsigned char * data, size_t len)
+unsigned char * raw_md5(const unsigned char * data, size_t len, unsigned char * md)
 {
-	static char out[16];
-	unsigned int *x, i, count;
+	static char m[16];
+	size_t i, count;
+	unsigned int *x;
 	unsigned int a = 0x67452301, b = 0xefcdab89, c = 0x98badcfe, d = 0x10325476;
 	unsigned int oa, ob, oc, od;
 	
+	if (!md) md = m;
 	count = ((len + 72) >> 6) << 4;
 	x = (unsigned int *)calloc(count, sizeof(unsigned int));
 	if (!x) return NULL;
@@ -74,7 +77,7 @@ unsigned char * raw_md5(const unsigned char * data, size_t len)
 	}
 	x[len >> 2] |= 0x00000080 << ((len & 3) << 3);
 	x[count - 2] = (len & 0x1fffffff) << 3;
-	x[count - 1] = len >> 29;
+	x[count - 1] = (unsigned int)len >> 29;
 		
 	i = 0;
 	while (i < count)
@@ -163,44 +166,62 @@ unsigned char * raw_md5(const unsigned char * data, size_t len)
 		i += 16;
 	}
 	
-	out[ 0] = a & 0xff;
-	out[ 1] = (a >>  8) & 0xff;
-	out[ 2] = (a >> 16) & 0xff;
-	out[ 3] = (a >> 24) & 0xff;
-	out[ 4] = b & 0xff;
-	out[ 5] = (b >>  8) & 0xff;
-	out[ 6] = (b >> 16) & 0xff;
-	out[ 7] = (b >> 24) & 0xff;
-	out[ 8] = c & 0xff;
-	out[ 9] = (c >>  8) & 0xff;
-	out[10] = (c >> 16) & 0xff;
-	out[11] = (c >> 24) & 0xff;
-	out[12] = d & 0xff;
-	out[13] = (d >>  8) & 0xff;
-	out[14] = (d >> 16) & 0xff;
-	out[15] = (d >> 24) & 0xff;
+	free(x);
 	
-	return out;
+	md[ 0] = a & 0xff;
+	md[ 1] = (a >>  8) & 0xff;
+	md[ 2] = (a >> 16) & 0xff;
+	md[ 3] = (a >> 24) & 0xff;
+	md[ 4] = b & 0xff;
+	md[ 5] = (b >>  8) & 0xff;
+	md[ 6] = (b >> 16) & 0xff;
+	md[ 7] = (b >> 24) & 0xff;
+	md[ 8] = c & 0xff;
+	md[ 9] = (c >>  8) & 0xff;
+	md[10] = (c >> 16) & 0xff;
+	md[11] = (c >> 24) & 0xff;
+	md[12] = d & 0xff;
+	md[13] = (d >>  8) & 0xff;
+	md[14] = (d >> 16) & 0xff;
+	md[15] = (d >> 24) & 0xff;
+	
+	return md;
 }
 
 /**
  * Method:   hex_md5
  * @data:    Data to be digested
  * @len:     Length of the data to be digested
+ * @md:      Hex digested result buffer
  * Returns:  Hex digested data or %NULL on failure
  */
-char * hex_md5(const unsigned char * data, size_t len)
+char * hex_md5(const unsigned char * data, size_t len, char * md)
 {
-	static char out[33];
-	unsigned char * bin;
+	static char m[33];
+	unsigned char buf[16];
 	int i;
 	
-	bin = raw_md5(data, len);
+	if (!md) md = m;
+	if (!raw_md5(data, len, buf)) return NULL;
 	
 	for (i = 0; i < 16; i++)
 	{
-		itoa(bin[i], out[i * 2], 16);
+		sprintf(&md[i * 2], "%02x", buf[i]);
 	}
 
-	return out;
+	return md;
 }
+
+#ifdef PHPRPC_UNITTEST
+void md5_test()
+{
+	char md[33];
+	
+    assert(strcmp(hex_md5((unsigned char *)"", 0, md), "d41d8cd98f00b204e9800998ecf8427e") == 0);
+	assert(strcmp(hex_md5((unsigned char *)"a", 1, md), "0cc175b9c0f1b6a831c399e269772661") == 0);
+	assert(strcmp(hex_md5((unsigned char *)"abc", 3, md), "900150983cd24fb0d6963f7d28e17f72") == 0);
+	assert(strcmp(hex_md5((unsigned char *)"message digest", 14, md), "f96b697d7cb7938d525a2f31aaf161d0") == 0);
+	assert(strcmp(hex_md5((unsigned char *)"abcdefghijklmnopqrstuvwxyz", 26, md), "c3fcd3d76192e4007dfb496cca67e13b") == 0);
+	assert(strcmp(hex_md5((unsigned char *)"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", 62, md), "d174ab98d277d9f5a5611c2c9f419d9f") == 0);
+}
+#endif

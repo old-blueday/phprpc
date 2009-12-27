@@ -25,7 +25,7 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Dec 19, 2009
+* LastModified: Dec 27, 2009
 * This library is free.  You can redistribute it and/or modify it.
 */
 
@@ -170,7 +170,7 @@ unsigned char * base64_decode(const char * data, size_t * out_len)
 }
 
 #ifdef PHPRPC_UNITTEST
-void base64_encode_test_io(const char * in, const char * known)
+static void base64_encode_test_io(const char * in, const char * known)
 {
 	char *out;
 	
@@ -188,7 +188,7 @@ void base64_encode_test()
 	base64_encode_test_io("all your base64 are belong to foo", "YWxsIHlvdXIgYmFzZTY0IGFyZSBiZWxvbmcgdG8gZm9v");
 }
 
-void base64_decode_test_io(const char * in)
+static void base64_decode_test_io(const char * in)
 {
 	char *encode_out;
 	unsigned char *decode_out;

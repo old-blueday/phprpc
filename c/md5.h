@@ -25,7 +25,7 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Dec 17, 2009
+* LastModified: Dec 27, 2009
 * This library is free.  You can redistribute it and/or modify it.
 */
 
@@ -34,9 +34,21 @@
 
 #include "phprpc.h"
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 #define ROL(Val, Shift) (((Val) << (Shift)) | ((Val) >> (32 - (Shift))))
 
-PHPRPCAPI unsigned char * raw_md5(const unsigned char * data, size_t len);
-PHPRPCAPI char * hex_md5(const unsigned char * data, size_t len);
+PHPRPCAPI unsigned char * raw_md5(const unsigned char * data, size_t len, unsigned char * md);
+PHPRPCAPI char * hex_md5(const unsigned char * data, size_t len, char * md);
+
+#ifdef PHPRPC_UNITTEST
+PHPRPCAPI void md5_test();
+#endif
+
+#ifdef  __cplusplus
+}
+#endif
 
 #endif

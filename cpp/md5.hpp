@@ -75,8 +75,8 @@ namespace phprpc
 		{
 			std::vector<uint> x;
 			
-			uint len = data.size();
-			uint count = ((len + 72) >> 6) << 4;
+			size_t len = data.size();
+			size_t count = ((len + 72) >> 6) << 4;
 			
 			x.resize(count);
 			
@@ -86,7 +86,7 @@ namespace phprpc
 			}
 			x[len >> 2] |= (uint)0x00000080 << ((len & 3) << 3);
 			x[count - 2] = (len & 0x1fffffff) << 3;
-			x[count - 1] = len >> 29;
+			x[count - 1] = (uint)len >> 29;
   
 			uint a = 0x67452301;
 			uint b = 0xefcdab89;

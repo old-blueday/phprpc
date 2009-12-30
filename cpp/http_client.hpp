@@ -187,7 +187,7 @@ namespace phprpc
 				getline(header, response_code_desc);
 				std::ostringstream ss;
 				ss << response_code;
-				uint index = response_code_desc.find_first_of(ss.str());
+				size_t index = response_code_desc.find_first_of(ss.str());
 				
 				if (index != std::string::npos)
 				{

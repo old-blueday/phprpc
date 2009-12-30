@@ -134,10 +134,10 @@ namespace phprpc
 			return "";
 		}
 
-		uint len = data.size() + 1;
+		size_t len = data.size() + 1;
         wchar * ws = new wchar[len];
 
-		MultiByteToWideChar(CP_ACP, 0, data.c_str(), len, ws, len * 2);
+		MultiByteToWideChar(CP_ACP, 0, data.c_str(), (int)len, ws, (int)len * 2);
 
         std::string retval = utf16_to_utf8(ws);
         delete ws;
@@ -152,10 +152,10 @@ namespace phprpc
 			return "";
 		}
 
-		uint len = data.size() + 1;
+		size_t len = data.size() + 1;
 		char * s = new char[len * 2];
 
-		WideCharToMultiByte(CP_ACP, 0, utf8_to_utf16(data).c_str(), -1, s, len * 2, NULL, NULL);
+		WideCharToMultiByte(CP_ACP, 0, utf8_to_utf16(data).c_str(), -1, s, (int)len * 2, NULL, NULL);
 
         std::string retval(s);
         delete s;

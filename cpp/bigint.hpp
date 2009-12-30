@@ -68,7 +68,7 @@ namespace phprpc
 			for (uint i = 0; i < s.size(); i++)
 			{
 				*this = (*this) * 10;
-				bigint t(dec.find(s[i]));
+				bigint t((uint)dec.find(s[i]));
 				*this = (*this) + t;
 			}
 		}
@@ -164,7 +164,7 @@ namespace phprpc
 			bigint r(1);
 
 			uint tmp;
-			uint n = y.length();
+			size_t n = y.length();
 
 			for (uint i = 0; i < n - 1; i++)
 			{
@@ -196,7 +196,7 @@ namespace phprpc
 		{
 			std::string retval;
 
-			uint n = length();
+			size_t n = length();
 
 			retval.resize(n * 4);
 
@@ -253,7 +253,7 @@ namespace phprpc
 		  if (length() < x.length()) return true;
 		  if (x.length() < length()) return false;
 
-		  for (uint i = length() - 1; i > 0; i--)
+		  for (size_t i = length() - 1; i > 0; i--)
 		  {
 			if (data[i] < x.data[i]) return true;
 			if (x.data[i] < data[i]) return false;
@@ -292,7 +292,7 @@ namespace phprpc
 			bigint r;
 
 			uint carry = 0;
-			const uint & max_size = std::max<uint>(length(), x.length());
+			const size_t & max_size = std::max<size_t>(length(), x.length());
 
 			resize(max_size + 1);
 			x.resize(max_size + 1);
@@ -328,7 +328,7 @@ namespace phprpc
 		{
 			uint carry = 0;
 			uint prevdigit;
-			const uint & max_size = std::max<uint>(length(), x.length());
+			const size_t & max_size = std::max<size_t>(length(), x.length());
 
 			resize(max_size + 1);
 			x.resize(max_size + 1);
@@ -381,7 +381,7 @@ namespace phprpc
 			bigint r(0);
 
 			uint borrow = 0;
-			const uint & max_size = std::max<uint>(length(), x.length());
+			const size_t & max_size = std::max<size_t>(length(), x.length());
 
 			resize(max_size + 1);
 			x.resize(max_size + 1);
@@ -417,7 +417,7 @@ namespace phprpc
 		{
 			uint borrow = 0;
 			uint prevdigit;
-			const uint & max_size = std::max<uint>(length(), x.length());
+			const size_t & max_size = std::max<size_t>(length(), x.length());
 
 			resize(max_size + 1);
 			x.resize(max_size + 1);
@@ -513,7 +513,7 @@ namespace phprpc
 				carry = data.back() & 1;
 				data.back() >>= 1;
 
-				for (int j = length() - 1; j >= 0; j--)
+				for (size_t j = length() - 1; j >= 0; j--)
 				{
 					if (carry)
 					{
@@ -577,12 +577,12 @@ namespace phprpc
 			return data.empty();
 		}
 
-		inline uint length() const
+		inline size_t length() const
 		{
 			return data.size();
 		}
 
-		inline void resize(uint size)
+		inline void resize(size_t size)
 		{
 			data.resize(size);
 		}

@@ -377,14 +377,14 @@ namespace phprpc
 				break;
 			case 'a':
 				{
-					int count = object_container.size();
+					size_t count = object_container.size();
 					retval = unserialize_hash_map();
 					object_container[count] = retval;
 				}
 				break;
 			case 'O':
 				{
-					int count = object_container.size();
+					size_t count = object_container.size();
 					retval = unserialize_object();
 					object_container[count] = retval;
 				}

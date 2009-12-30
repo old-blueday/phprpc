@@ -527,7 +527,7 @@ namespace phprpc
 				{
 					key.resize(16);
 					std::string k = bigint::powmod(y, x, p).to_bin();
-					const uint & n = std::min<uint>(k.size(), 16);
+					const size_t & n = std::min<size_t>(k.size(), 16);
 					for (uint i = 0; i < n; i++)
 					{
 						key[15 - i] = k[n - i - 1];

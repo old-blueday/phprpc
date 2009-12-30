@@ -109,7 +109,7 @@ namespace phprpc
 		 */
 		static std::vector<uint> & encrypt(std::vector<uint> & data, std::vector<uint> & key)
 		{
-			size_t n = data.size() - 1;
+			uint n = (uint)data.size() - 1;
 
 			if (n < 1) return data;
 			
@@ -143,7 +143,7 @@ namespace phprpc
 		 */
 		static std::vector<uint> & decrypt(std::vector<uint> & data, std::vector<uint> & key)
 		{
-			size_t n = data.size() - 1;
+			uint n = (uint)data.size() - 1;
 
 			if (n < 1) return data;
 
@@ -187,7 +187,7 @@ namespace phprpc
             if (inc_len)
 			{
 				retval.resize(n + 1);
-                *retval.rbegin() = len;
+                *retval.rbegin() = (uint)len;
             }
             else
 			{

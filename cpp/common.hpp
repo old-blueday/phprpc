@@ -616,7 +616,7 @@ namespace phprpc
 	template<typename Type>
 	void string_replace_all(Type & data, const char * search, const char * format)
     {
-		uint index;
+		size_t index;
 
 		while ((index = data.find(search)) != Type::npos)
 		{
@@ -635,7 +635,7 @@ namespace phprpc
 			{
 				if (iter->value<Type>() == data)
 				{
-					return iter - container.begin();
+					return (int)(iter - container.begin());
 				}
 			}
 			iter++;

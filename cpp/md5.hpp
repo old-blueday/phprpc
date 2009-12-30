@@ -25,7 +25,7 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Nov 30, 2009
+* LastModified: Dec 30, 2009
 * This library is free.  You can redistribute it and/or modify it.
 */
 
@@ -80,7 +80,7 @@ namespace phprpc
 			
 			x.resize(count);
 			
-			for (uint i = 0; i < len; i++)
+			for (size_t i = 0; i < len; i++)
 			{
 				x[i >> 2] |= ((ubyte)data[i]) << ((i & 3) << 3);
 			}
@@ -93,7 +93,7 @@ namespace phprpc
 			uint c = 0x98badcfe;
 			uint d = 0x10325476;
 			
-			uint i = 0;
+			size_t i = 0;
 			while (i < count)
 			{
 				uint oa = a;
@@ -228,6 +228,18 @@ namespace phprpc
 			
 			return ss.str();
 		}
+		
+	#ifdef PHPRPC_UNITTEST
+		static void test()
+		{
+			assert(hex(std::string("")) == "d41d8cd98f00b204e9800998ecf8427e");
+			assert(hex(std::string("a")) == "0cc175b9c0f1b6a831c399e269772661");
+			assert(hex(std::string("abc")) == "900150983cd24fb0d6963f7d28e17f72");
+			assert(hex(std::string("message digest")) == "f96b697d7cb7938d525a2f31aaf161d0");
+			assert(hex(std::string("abcdefghijklmnopqrstuvwxyz")) == "c3fcd3d76192e4007dfb496cca67e13b");
+			assert(hex(std::string("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")) == "d174ab98d277d9f5a5611c2c9f419d9f");
+		}
+	#endif
 	
 	}; // class md5
 

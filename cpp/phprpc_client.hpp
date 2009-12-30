@@ -424,7 +424,7 @@ namespace phprpc
 								header.seekg(1, std::ios::cur);
 								getline(header, cookies);
 							}
-							header.ignore(100, '\n');
+							header.ignore(1000, '\n');
 						}
 
 						if (version == 0)

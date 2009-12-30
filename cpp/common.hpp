@@ -411,7 +411,7 @@ namespace phprpc
 
 	struct any_hash
 	{
-		uint operator()(const any & value) const
+		size_t operator()(const any & value) const
 		{
 			const std::type_info & vtype = value.type();
 

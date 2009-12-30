@@ -25,7 +25,7 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Dec 7, 2009
+* LastModified: Dec 30, 2009
 * This library is free.  You can redistribute it and/or modify it.
 */
 
@@ -190,17 +190,28 @@ static unsigned int * xxtea_uint_decrypt(unsigned int * data, size_t len, unsign
  */
 static unsigned char * xxtea_encrypt(const unsigned char * data, size_t len, const unsigned char * key, size_t * out_len)
 {
+	unsigned char *out; 
 	unsigned int *data_array, *key_array;
 	size_t data_len, key_len;
 	
 	if (!len) return NULL;
 
 	data_array = xxtea_to_uint_array(data, len, 1, &data_len);
-	key_array  = xxtea_to_uint_array(key, 16, 0, &key_len);
-
-	if ((!data_array) || (!key_array)) return NULL;
+	if (!data_array) return NULL;
 	
-	return xxtea_to_ubyte_array(xxtea_uint_encrypt(data_array, data_len, key_array), data_len, 0, out_len);
+	key_array  = xxtea_to_uint_array(key, 16, 0, &key_len);
+	if (!key_array)
+	{
+		free(data_array);
+		return NULL;
+	}
+	
+	out = xxtea_to_ubyte_array(xxtea_uint_encrypt(data_array, data_len, key_array), data_len, 0, out_len);
+	
+	free(data_array);
+	free(key_array);
+	
+	return out;
 }
 
 /**
@@ -215,17 +226,28 @@ static unsigned char * xxtea_encrypt(const unsigned char * data, size_t len, con
  */
 static unsigned char * xxtea_decrypt(const unsigned char * data, size_t len, const unsigned char * key, size_t * out_len)
 {
+	unsigned char *out;
 	unsigned int *data_array, *key_array;
 	size_t data_len, key_len;
 	
 	if (!len) return NULL;
 
 	data_array = xxtea_to_uint_array(data, len, 0, &data_len);
-	key_array  = xxtea_to_uint_array(key, 16, 0, &key_len);
-
-	if ((!data_array) || (!key_array)) return NULL;
+	if (!data_array) return NULL;
 	
-	return xxtea_to_ubyte_array(xxtea_uint_decrypt(data_array, data_len, key_array), data_len, 1, out_len);
+	key_array  = xxtea_to_uint_array(key, 16, 0, &key_len);
+	if (!key_array)
+	{
+		free(data_array);
+		return NULL;
+	}
+	
+	out = xxtea_to_ubyte_array(xxtea_uint_decrypt(data_array, data_len, key_array), data_len, 1, out_len);
+
+	free(data_array);
+	free(key_array);	
+	
+	return out;
 }
 
 /**

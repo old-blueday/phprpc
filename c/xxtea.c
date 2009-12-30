@@ -25,7 +25,7 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Dec 7, 2009
+* LastModified: Dec 30, 2009
 * This library is free.  You can redistribute it and/or modify it.
 */
 
@@ -52,7 +52,7 @@ unsigned int * xxtea_to_uint_array(const unsigned char * data, size_t len, int i
 	{
 		out = (unsigned int *)calloc(n + 1, sizeof(unsigned int));
 		if (!out) return NULL;
-		out[n] = len;
+		out[n] = (unsigned int)len;
 		*out_len = n + 1;
 	}
 	else
@@ -116,7 +116,7 @@ unsigned char * xxtea_to_ubyte_array(const unsigned int * data, size_t len, int 
  */
 unsigned int * xxtea_uint_encrypt(unsigned int * data, size_t len, unsigned int * key)
 {
-	size_t n = len - 1;
+	unsigned int n = (unsigned int)len - 1;
 	unsigned int z = data[n], y = data[0], p, q = 6 + 52 / (n + 1), sum = 0, e;
 	
 	if (n < 1) return data;
@@ -148,7 +148,7 @@ unsigned int * xxtea_uint_encrypt(unsigned int * data, size_t len, unsigned int 
  */
 unsigned int * xxtea_uint_decrypt(unsigned int * data, size_t len, unsigned int * key)
 {
-	size_t n = len - 1;
+	unsigned int n = (unsigned int)len - 1;
 	unsigned int z = data[n], y = data[0], p, q = 6 + 52 / (n + 1), sum = q * DELTA, e;
 
 	if (n < 1) return data;
@@ -183,17 +183,28 @@ unsigned int * xxtea_uint_decrypt(unsigned int * data, size_t len, unsigned int 
  */
 unsigned char * xxtea_encrypt(const unsigned char * data, size_t len, const unsigned char * key, size_t * out_len)
 {
+	unsigned char *out; 
 	unsigned int *data_array, *key_array;
 	size_t data_len, key_len;
 	
 	if (!len) return NULL;
 
 	data_array = xxtea_to_uint_array(data, len, 1, &data_len);
-	key_array  = xxtea_to_uint_array(key, 16, 0, &key_len);
-
-	if ((!data_array) || (!key_array)) return NULL;
+	if (!data_array) return NULL;
 	
-	return xxtea_to_ubyte_array(xxtea_uint_encrypt(data_array, data_len, key_array), data_len, 0, out_len);
+	key_array  = xxtea_to_uint_array(key, 16, 0, &key_len);
+	if (!key_array)
+	{
+		free(data_array);
+		return NULL;
+	}
+	
+	out = xxtea_to_ubyte_array(xxtea_uint_encrypt(data_array, data_len, key_array), data_len, 0, out_len);
+	
+	free(data_array);
+	free(key_array);
+	
+	return out;
 }
 
 /**
@@ -208,16 +219,27 @@ unsigned char * xxtea_encrypt(const unsigned char * data, size_t len, const unsi
  */
 unsigned char * xxtea_decrypt(const unsigned char * data, size_t len, const unsigned char * key, size_t * out_len)
 {
+	unsigned char *out;
 	unsigned int *data_array, *key_array;
 	size_t data_len, key_len;
 	
 	if (!len) return NULL;
 
 	data_array = xxtea_to_uint_array(data, len, 0, &data_len);
-	key_array  = xxtea_to_uint_array(key, 16, 0, &key_len);
-
-	if ((!data_array) || (!key_array)) return NULL;
+	if (!data_array) return NULL;
 	
-	return xxtea_to_ubyte_array(xxtea_uint_decrypt(data_array, data_len, key_array), data_len, 1, out_len);
+	key_array  = xxtea_to_uint_array(key, 16, 0, &key_len);
+	if (!key_array)
+	{
+		free(data_array);
+		return NULL;
+	}
+	
+	out = xxtea_to_ubyte_array(xxtea_uint_decrypt(data_array, data_len, key_array), data_len, 1, out_len);
+
+	free(data_array);
+	free(key_array);	
+	
+	return out;
 }
 

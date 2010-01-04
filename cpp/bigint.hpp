@@ -25,7 +25,7 @@
  *
  * Copyright: Chen fei <cf850118@163.com>
  * Version: 3.0
- * LastModified: Nov 29, 2009
+ * LastModified: Jan 4, 2010
  * This library is free.  You can redistribute it and/or modify it.
  */
 
@@ -513,7 +513,7 @@ namespace phprpc
 				carry = data.back() & 1;
 				data.back() >>= 1;
 
-				for (size_t j = length() - 1; j >= 0; j--)
+				for (int j = (int)length() - 1; j >= 0; j--)
 				{
 					if (carry)
 					{

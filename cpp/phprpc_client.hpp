@@ -412,17 +412,20 @@ namespace phprpc
 							{
 								std::string strval;
 								header.seekg(1, std::ios::cur);
-								getline(header, strval, '/');
-								transform(strval.begin(), strval.end(), strval.begin(), tolower);
-								if (strval == "phprpc server")
+								if (tolower(header.rdbuf()->sgetc()) == 'p')
 								{
-									header >> version;
+									getline(header, strval, '/');
+									transform(strval.begin(), strval.end(), strval.begin(), tolower);
+									if (strval == "phprpc server")
+									{
+										header >> version;
+									}
 								}
 							}
 							else if (line == "set-cookie")
 							{
 								header.seekg(1, std::ios::cur);
-								getline(header, cookies);
+								getline(header, cookies, '\r');;
 							}
 							header.ignore(1000, '\n');
 						}

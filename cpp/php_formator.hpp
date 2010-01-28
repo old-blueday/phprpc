@@ -342,6 +342,7 @@ namespace phprpc
 			{
 			case 'N':
 				retval = NULL;
+				buffer.seekg(1, std::ios::cur);
 				object_container.push_back(retval);
 				break;
 			case 'b':

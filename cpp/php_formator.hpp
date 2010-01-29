@@ -25,7 +25,7 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Nov 30, 2009
+* LastModified: Jan 30, 2010
 * This library is free.  You can redistribute it and/or modify it.
 */
 
@@ -451,12 +451,14 @@ namespace phprpc
 		}
 
 		std::string unserialize_string()
-		{
+		{		
 			std::string value;
-			value.reserve(unserialize_int());
+			int len = unserialize_int();
+			value.reserve(len);
 			buffer.seekg(1, std::ios::cur);
-			std::getline(buffer, value, '"');
-			buffer.seekg(1, std::ios::cur);
+			for (int i = 0; i < len; i++)
+				value.push_back(buffer.rdbuf()->sbumpc());
+			buffer.seekg(2, std::ios::cur);
 			return value;
 		}
 

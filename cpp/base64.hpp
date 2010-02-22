@@ -25,7 +25,7 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Dec 18, 2009
+* LastModified: Feb 22, 2010
 * This library is free.  You can redistribute it and/or modify it.
 */
 
@@ -116,10 +116,17 @@ namespace phprpc
 
 			return retval;
 		}
-
-		inline static std::string encode(const std::string & data)
+		
+		// param: const char *
+		inline static std::string encode(const char * data)
 		{
-			return encode<std::string>(data);
+			return encode(std::string(data));
+		}
+
+		// param: char *
+		inline static std::string encode(char * data)
+		{
+			return encode(std::string(data));
 		}
 		
 		/**
@@ -167,6 +174,7 @@ namespace phprpc
 			return retval;
 		}
 
+		// return std::string
 		inline static std::string decode(const std::string & data)
 		{
 			return decode<std::string>(data);
@@ -175,20 +183,20 @@ namespace phprpc
 	#ifdef PHPRPC_UNITTEST
 		static void encode_test()
 		{
-			assert(encode(std::string("f")) == "Zg==");
-			assert(encode(std::string("fo")) == "Zm8=");
-			assert(encode(std::string("foo")) == "Zm9v");
-			assert(encode(std::string("foos")) == "Zm9vcw==");
-			assert(encode(std::string("all your base64 are belong to foo")) == "YWxsIHlvdXIgYmFzZTY0IGFyZSBiZWxvbmcgdG8gZm9v");		
+			assert(encode("f") == "Zg==");
+			assert(encode("fo") == "Zm8=");
+			assert(encode("foo") == "Zm9v");
+			assert(encode("foos") == "Zm9vcw==");
+			assert(encode("all your base64 are belong to foo") == "YWxsIHlvdXIgYmFzZTY0IGFyZSBiZWxvbmcgdG8gZm9v");		
 		}
 		
 		static void decode_test()
 		{
-			assert(decode(encode(std::string("f"))) == "f");
-			assert(decode(encode(std::string("fo"))) == "fo");
-			assert(decode(encode(std::string("foo"))) == "foo");
-			assert(decode(encode(std::string("foos"))) == "foos");
-			assert(decode(encode(std::string("all your base64 are belong to foo"))) == "all your base64 are belong to foo");				
+			assert(decode(encode("f")) == "f");
+			assert(decode(encode("fo")) == "fo");
+			assert(decode(encode("foo")) == "foo");
+			assert(decode(encode("foos")) == "foos");
+			assert(decode(encode("all your base64 are belong to foo")) == "all your base64 are belong to foo");				
 		}
 	#endif
 		

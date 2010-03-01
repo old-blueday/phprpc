@@ -25,7 +25,7 @@
  *
  * Copyright: Ma Bingyao <andot@ujn.edu.cn>
  * Version: 3.0.2
- * LastModified: Mar 21, 2009
+ * LastModified: Mar 1, 2010
  * This library is free.  You can redistribute it and/or modify it.
  *
 /*
@@ -159,7 +159,7 @@ final class SocketPool {
             socket.isClosed() ||
             socket.isInputShutdown() ||
             socket.isOutputShutdown() ||
-            socket.isConnected()) {
+            !socket.isConnected()) {
             if (socket != null) {
                 try {
                     socket.close();

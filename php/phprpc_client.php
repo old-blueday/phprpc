@@ -26,7 +26,7 @@
  *
  * Copyright: Ma Bingyao <andot@ujn.edu.cn>
  * Version: 3.0
- * LastModified: Apr 28, 2009
+ * LastModified: Mar 1, 2010
  * This library is free.  You can redistribute it and/or modify it.
  *
 /*
@@ -110,7 +110,7 @@ class _PHPRPC_Client {
     function _PHPRPC_Client($serverURL = '') {
         global $_PHPRPC_SID;
         require_once('compat.php');
-        register_shutdown_function(array(&$this, "_disconnect"));
+        //register_shutdown_function(array(&$this, "_disconnect"));
         $this->_proxy = NULL;
         $this->_timeout = 30;
         $this->_clientid = 'php' . rand(1 << 30, 1 << 31) . time() . $_PHPRPC_SID;
@@ -315,11 +315,11 @@ class _PHPRPC_Client {
     function _connect() {
         if (is_null($this->_proxy)) {
             $host = (($this->_server['scheme'] == "https") ? "ssl://" : "") . $this->_server['host'];
-            $this->_socket = @fsockopen($host, $this->_server['port'], $errno, $errstr, $this->_timeout);
+            $this->_socket = @pfsockopen($host, $this->_server['port'], $errno, $errstr, $this->_timeout);
         }
         else {
             $host = (($this->_server['scheme'] == "https") ? "ssl://" : "") . $this->_proxy['host'];
-            $this->_socket = @fsockopen($host, $this->_proxy['port'], $errno, $errstr, $this->_timeout);
+            $this->_socket = @pfsockopen($host, $this->_proxy['port'], $errno, $errstr, $this->_timeout);
         }
         if ($this->_socket === false) {
             return new PHPRPC_Error($errno, $errstr);
@@ -356,7 +356,7 @@ class _PHPRPC_Client {
         }
         if (is_null($this->_proxy)) {
             $url = $this->_server['path'];
-            $connection = "Connection: " . ($this->_keep_alive ? 'keep-alive' : 'close') . "\r\n" .
+            $connection = "Connection: " . ($this->_keep_alive ? 'Keep-Alive' : 'Close') . "\r\n" .
                           "Cache-Control: no-cache\r\n";
         }
         else {

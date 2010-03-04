@@ -27,12 +27,26 @@
 *
 * Copyright: Chen fei <cf850118@163.com>
 * Version: 3.0
-* LastModified: Dec 18, 2009
+* LastModified: Mar 4, 2010
 * This library is free.  You can redistribute it and/or modify it.
 */
 
 #ifndef PHPRPC_COMMON_INCLUDED
 #define PHPRPC_COMMON_INCLUDED
+
+#if (defined(_MSC_VER) && (_MSC_VER >= 1500)) // VC2008
+#define HAS_CPP_TR1
+#endif
+#if	(defined(__BORLANDC__) && (__BORLANDC__ >= 0x0610)) // C++Builder 2009 
+#define HAS_CPP_TR1
+#endif
+#if (defined(__GNUC__) && ((__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR >= 3)))) // GNU C++ 4.3
+#define HAS_CPP_TR1
+#endif
+
+#ifdef PHPRPC_UNITTEST
+#include <assert.h>
+#endif
 
 #include <curl/curl.h>
 
@@ -42,20 +56,21 @@
 #include <typeinfo>
 #include <vector>
 
-#ifdef __BORLANDC__
+#if (defined(HAS_CPP_TR1) && (!defined(USE_BOOST_LIB)))
 #include <unordered_map>
-#include <boost/functional/hash.hpp>
+#define UnorderdMap            std::tr1::unordered_map
+#define HashValue(Type, Value) std::hash<Type>()(Value)
 #else
 #include <boost/unordered_map.hpp>
+#define UnorderdMap            boost::unordered_map
+#define HashValue(Type, Value) boost::hash_value((Type)Value)
 #endif
 
 // compatibility
 
 #ifdef __BORLANDC__
-#define UnorderdMap    std::tr1::unordered_map
 #define AnyCast(Type)  const Type &
 #else
-#define UnorderdMap    boost::unordered_map
 #define AnyCast(Type)  Type
 #endif
 
@@ -417,27 +432,27 @@ namespace phprpc
 
 			if (vtype == typeid(int))
 			{
-				return boost::hash_value((int)value);
+				return HashValue(int, value);
 			}
 			else if (vtype == typeid(int64))
 			{
-				return boost::hash_value((int64)value);
+				return HashValue(int64, value);
 			}
 			else if (vtype == typeid(uint64))
 			{
-				return boost::hash_value((uint64)value);
+				return HashValue(uint64, value);
 			}
 			else if (vtype == typeid(real))
 			{
-				return boost::hash_value((real)value);
+				return HashValue(real, value);
 			}
 			else if (vtype == typeid(std::string))
 			{
-				return boost::hash_value(value.value<std::string>());
+				return HashValue(std::string, value.value<std::string>());
 			}
 			else if (vtype == typeid(std::wstring))
 			{
-				return boost::hash_value(value.value<std::wstring>());
+				return HashValue(std::wstring, value.value<std::wstring>());
 			}
 			else
 			{

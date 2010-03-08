@@ -176,13 +176,20 @@ begin
   NumParams := 0;
   FHasSelf := False;
   FHasResult := False;
+{$ifdef DELPHI2010_UP}
+  for I := 0 to ReturnInfo^.ParamCount - 1 do
+{$else}
   while Integer(ParamInfo) < Integer(Integer(MethodInfo) + MethodInfo^.Len) do
+{$endif}
   begin
     Inc(NumParams);
     FHasSelf := FHasSelf or SameText(string(ParamInfo.Name), 'Self'); // do not localize
     FHasResult := FHasResult or (pfResult in ParamInfo.Flags);
     Inc(Integer(ParamInfo), SizeOf(TParamInfo) - SizeOf(ShortString) + 1 +
       Length(PParamInfo(ParamInfo)^.Name));
+  {$ifdef DELPHI2010_UP}
+    Inc(Integer(ParamInfo), PWord(ParamInfo)^);
+  {$endif}
   end;
   SetLength(FParamInfos, NumParams - Ord(FHasSelf) - Ord(FHasResult));
   ParamInfo := Pointer(FReturnInfo);
@@ -195,6 +202,9 @@ begin
     end;
     Inc(Integer(ParamInfo), SizeOf(TParamInfo) - SizeOf(ShortString) + 1 +
       Length(PParamInfo(ParamInfo)^.Name));
+  {$ifdef DELPHI2010_UP}
+    Inc(Integer(ParamInfo), PWord(ParamInfo)^);
+  {$endif}
   end;
   FHasResult := FReturnInfo^.ReturnType <> nil;
   FOwner.FMethods[IntToStr(Length(FParamInfos)) + Prefix + FMethodName] := Integer(Self);

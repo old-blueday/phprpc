@@ -26,7 +26,7 @@
  *
  * Copyright: Chen fei <cf850118@163.com>
  * Version: 3.0.2
- * LastModified: Oct 30, 2009
+ * LastModified: Mar 8, 2010
  * This library is free.  You can redistribute it and/or modify it.
  */
 }
@@ -41,10 +41,10 @@ uses
   TypInfo;
 
 const
-  paEAX     = Word(0);
-  paEDX     = Word(1);
-  paECX     = Word(2);
-  paStack   = Word(3);
+  paEAX = Word(0);
+  paEDX = Word(1);
+  paECX = Word(2);
+  paStack = Word(3);
 
 type
 
@@ -64,10 +64,13 @@ type
 
   PReturnInfo = ^TReturnInfo;
   TReturnInfo = packed record
-    Version:           Byte; // Must be 1
+    Version: Byte; // Must be 1 or 2
     CallingConvention: TCallingConvention;
-    ReturnType:        ^PTypeInfo;
-    ParamSize:         Word;
+    ReturnType: ^PTypeInfo;
+    ParamSize: Word;
+  {$ifdef DELPHI2010_UP}
+    ParamCount: Byte;
+  {$endif}
   end;
 
   PParamInfo = ^TParamInfo;
@@ -490,7 +493,11 @@ begin
 
   InfoEnd := Pointer(Integer(MethodHeader) + MethodHeader^.Len);
   Count   := 0;
+{$ifdef DELPHI2010_UP}
+  for I := 0 to ReturnInfo^.ParamCount - 1 do
+{$else}
   while Integer(MethodInfo) < Integer(InfoEnd) do
+{$endif}
   begin
     if Count >= MaxParams then
       raise Exception.CreateFmt(sMethodOver, [MethodName, MaxParams]);
@@ -498,6 +505,9 @@ begin
     Inc(Count);
     Inc(Integer(MethodInfo), SizeOf(TParamInfo) - SizeOf(ShortString) + 1 +
       Length(PParamInfo(MethodInfo)^.Name));
+  {$ifdef DELPHI2010_UP}
+    Inc(Integer(MethodInfo), PWord(MethodInfo)^);
+  {$endif}
   end;
 
   if High(Params) >= Count then

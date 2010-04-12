@@ -25,7 +25,7 @@
  *
  * Copyright: Ma Bingyao <andot@ujn.edu.cn>
  * Version: 3.0.2
- * LastModified: Apr 12, 2010
+ * LastModified: Apr 13, 2010
  * This library is free.  You can redistribute it and/or modify it under GPL.
  */
 
@@ -53,6 +53,7 @@ namespace org.phprpc {
         public SynchronizationContext context;
         public SendOrPostCallback asyncCallback;
         public Delegate syncCallback;
+        public Exception error;
         public RequestState() {
             this.function = null;
             this.args = null;
@@ -64,6 +65,7 @@ namespace org.phprpc {
             this.context = null;
             this.asyncCallback = null;
             this.syncCallback = null;
+            this.error = null;
         }
     }
 #endif
@@ -611,54 +613,80 @@ namespace org.phprpc {
                 }
             }
         }
+        private void DoError(Object state) {
+            RequestState requestState = state as RequestState;        
+            PHPRPC_Error error = new PHPRPC_Error(1, requestState.error.Message);
+            if (requestState.syncCallback != null) {
+                Delegate callback = (Delegate)requestState.syncCallback;
+                Type callbackType = callback.GetType();
+                if (callbackType.IsGenericType) {
+                    callback.DynamicInvoke(null, requestState.args, "", error, true);
+                }
+                else {
+                    ((PHPRPC_Callback)callback)(error, requestState.args, "", error);
+                }
+            }
+        }
         private void GetResponseCallback(IAsyncResult asyncResult) {
             RequestState requestState = (RequestState)asyncResult.AsyncState;
-            HttpWebResponse response = (HttpWebResponse)requestState.request.EndGetResponse(asyncResult);
+            try {
+                HttpWebResponse response = (HttpWebResponse)requestState.request.EndGetResponse(asyncResult);
 #if !SILVERLIGHT
-            Boolean hasCookie = false;
-            for (Int32 i = 0; i < response.Headers.Count; ++i) {
-                if (response.Headers.Keys[i].ToLower() == "set-cookie") {
-                    lock (cookies.SyncRoot) {
-                        hasCookie = true;
-                        Regex regex = new Regex("=");
-                        foreach (String c in Regex.Split(response.Headers[i], @"[;,]\s?")) {
-                            String name, value;
-                            if (c.IndexOf('=') > -1) {
-                                String[] pair = regex.Split(c, 2);
-                                name = pair[0];
-                                value = pair[1];
-                            }
-                            else {
-                                name = c;
-                                value = "";
-                            }
-                            if ((name != "domain") && (name != "expires") &&
-                                (name != "path") && (name != "secure")) {
-                                cookies[name] = value;
+                Boolean hasCookie = false;
+                for (Int32 i = 0; i < response.Headers.Count; ++i) {
+                    if (response.Headers.Keys[i].ToLower() == "set-cookie") {
+                        lock (cookies.SyncRoot) {
+                            hasCookie = true;
+                            Regex regex = new Regex("=");
+                            foreach (String c in Regex.Split(response.Headers[i], @"[;,]\s?")) {
+                                String name, value;
+                                if (c.IndexOf('=') > -1) {
+                                    String[] pair = regex.Split(c, 2);
+                                    name = pair[0];
+                                    value = pair[1];
+                                }
+                                else {
+                                    name = c;
+                                    value = "";
+                                }
+                                if ((name != "domain") && (name != "expires") &&
+                                    (name != "path") && (name != "secure")) {
+                                    cookies[name] = value;
+                                }
                             }
                         }
                     }
                 }
-            }
-            if (hasCookie) {
-                lock (cookies.SyncRoot) {
-                    String mcookie = "";
-                    foreach (DictionaryEntry entry in cookies) {
-                        mcookie += entry.Key.ToString() + "=" + entry.Value.ToString() + "; ";
+                if (hasCookie) {
+                    lock (cookies.SyncRoot) {
+                        String mcookie = "";
+                        foreach (DictionaryEntry entry in cookies) {
+                            mcookie += entry.Key.ToString() + "=" + entry.Value.ToString() + "; ";
+                        }
+                        cookie = mcookie;
                     }
-                    cookie = mcookie;
                 }
-            }
 #endif
-            requestState.response = response;
-            requestState.context.Post(requestState.asyncCallback, requestState);
+                requestState.response = response;
+                requestState.context.Post(requestState.asyncCallback, requestState);
+            }
+            catch (Exception e) {
+                requestState.error = e;
+                requestState.context.Post(new SendOrPostCallback(DoError), requestState);
+            }
         }
         private void GetRequestStreamCallback(IAsyncResult asyncResult) {
-            RequestState requestState = (RequestState)asyncResult.AsyncState;
-            Stream rs = requestState.request.EndGetRequestStream(asyncResult);
-            rs.Write(requestState.bufferWrite, 0, requestState.bufferWrite.Length);
-            rs.Close();
-            requestState.request.BeginGetResponse(new AsyncCallback(GetResponseCallback), requestState);
+            RequestState requestState = (RequestState)asyncResult.AsyncState;        
+            try {
+                Stream rs = requestState.request.EndGetRequestStream(asyncResult);
+                rs.Write(requestState.bufferWrite, 0, requestState.bufferWrite.Length);
+                rs.Close();
+                requestState.request.BeginGetResponse(new AsyncCallback(GetResponseCallback), requestState);
+            }
+            catch (Exception e) {
+                requestState.error = e;
+                requestState.context.Post(new SendOrPostCallback(DoError), requestState);
+            }
         }
         private void POST(RequestState requestState) {
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;

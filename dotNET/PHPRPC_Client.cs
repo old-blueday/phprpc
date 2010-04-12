@@ -464,7 +464,19 @@ namespace org.phprpc {
             requestState.byRef = byRef;
             requestState.encryptMode = encryptMode;
             requestQueue.Enqueue(requestState);
-            BeginKeyExchange();
+            try {
+                BeginKeyExchange();
+            }
+            catch (Exception e) {
+                PHPRPC_Error error = new PHPRPC_Error(1, e.Message);
+                Type callbackType = callback.GetType();
+                if (callbackType.IsGenericType) {
+                    callback.DynamicInvoke(null, args, output, error, true);
+                }
+                else {
+                    ((PHPRPC_Callback)callback)(error, args, output, error);
+                }
+            }
         }
         private void BeginKeyExchange() {
             if (keyExchanging) return;

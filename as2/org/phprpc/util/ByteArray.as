@@ -15,17 +15,17 @@
 | Authors:  Ma Bingyao <andot@ujn.edu.cn>                  |
 |                                                          |
 | This file may be distributed and/or modified under the   |
-| terms of the GNU Lesser General Public License (LGPL)    |
-| version 3.0 as published by the Free Software Foundation |
-| and appearing in the included file LICENSE.              |
+| terms of the GNU General Public License (GPL) version    |
+| 2.0 as published by the Free Software Foundation and     |
+| appearing in the included file LICENSE.                  |
 |                                                          |
 \**********************************************************/
 /* ByteArray for ActionScript 2.0.
  *
  * Copyright: Ma Bingyao <andot@ujn.edu.cn>
  * Version: 1.0
- * LastModified: Jan 14, 2008
- * This library is free.  You can redistribute it and/or modify it.
+ * LastModified: Apr 12, 2010
+ * This library is free.  You can redistribute it and/or modify it under GPL.
  */
 dynamic class org.phprpc.util.ByteArray extends Array {
 	public var position:Number = 0;

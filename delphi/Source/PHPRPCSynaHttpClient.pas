@@ -16,9 +16,9 @@
 | Authors:  Chen fei <cf850118@163.com>                    |
 |                                                          |
 | This file may be distributed and/or modified under the   |
-| terms of the GNU Lesser General Public License (LGPL)    |
-| version 3.0 as published by the Free Software Foundation |
-| and appearing in the included file LICENSE.              |
+| terms of the GNU General Public License (GPL) version    |
+| 2.0 as published by the Free Software Foundation and     |
+| appearing in the included file LICENSE.                  |
 |                                                          |
 \**********************************************************/
 
@@ -27,7 +27,7 @@
  * Copyright: Chen fei <cf850118@163.com>
  * Version: 3.0.2
  * LastModified: Oct 30, 2009
- * This library is free.  You can redistribute it and/or modify it.
+ * This library is free.  You can redistribute it and/or modify it under GPL.
  */
 }
 
